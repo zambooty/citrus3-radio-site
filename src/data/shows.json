@@ -1,0 +1,90 @@
+[
+    {
+        "id": "morning-coffee",
+        "title": "Morning Coffee",
+        "host": "Sarah J.",
+        "description": "Start your day right with a blend of upbeat tunes, local weather, and community announcements. Sarah J. brings you the perfect mix to wake up to.",
+        "airTime": "Weekdays at 8:00 AM",
+        "image": "/images/coffee.jpg"
+    },
+    {
+        "id": "local-news-hour",
+        "title": "Local News Hour",
+        "host": "The CASF News Team",
+        "description": "In-depth coverage of the stories directly affecting our valley. Town council updates, school board meetings, and local sports.",
+        "airTime": "Mon-Fri at 10:00 AM",
+        "image": "/images/news.jpg"
+    },
+    {
+        "id": "lunchtime-jazz",
+        "title": "Lunchtime Jazz",
+        "host": "Marcus",
+        "description": "Smooth jazz, bebop, and fusion to accompany your midday break. Marcus curates a sophisticated selection of standards and modern cuts.",
+        "airTime": "Mondays at 12:00 PM",
+        "image": "/images/jazz.jpg"
+    },
+    {
+        "id": "community-voices",
+        "title": "Community Voices",
+        "host": "Various",
+        "description": "An open platform for local non-profits, artists, and organizers to discuss their work and upcoming events.",
+        "airTime": "Mondays at 2:00 PM",
+        "image": "/images/voices.jpg"
+    },
+    {
+        "id": "tech-talk",
+        "title": "Tech Talk",
+        "host": "Dave Fineberg",
+        "description": "Demystifying technology for everyone. Dave covers the latest gadgets, digital privacy tips, and local tech initiatives.",
+        "airTime": "Tuesdays at 10:00 AM",
+        "image": "/images/tech.jpg"
+    },
+    {
+        "id": "valley-voices",
+        "title": "Valley Voices",
+        "host": "Sarah J.",
+        "description": "Exploring the rich history of our region through interviews with long-time residents and local historians.",
+        "airTime": "Tuesdays at 7:00 PM",
+        "image": "/images/history.jpg"
+    },
+    {
+        "id": "midweek-mix",
+        "title": "Midweek Mix",
+        "host": "DJ Al",
+        "description": "An eclectic mix of indie, rock, and pop to get you over the hump. Expect the unexpected.",
+        "airTime": "Wednesdays at 12:00 PM",
+        "image": "/images/mix.jpg"
+    },
+    {
+        "id": "friday-night-live",
+        "title": "Friday Night Live",
+        "host": "The Band",
+        "description": "Live recordings of local bands performing at venues around the valley. Support local music!",
+        "airTime": "Fridays at 8:00 PM",
+        "image": "/images/live.jpg"
+    },
+    {
+        "id": "market-live-remote",
+        "title": "Market Live Remote",
+        "host": "Morning Team",
+        "description": "Broadcasting live from the Valley Harvest Community Market. Interviews with vendors and shoppers.",
+        "airTime": "Saturdays at 9:00 AM",
+        "image": "/images/market.jpg"
+    },
+    {
+        "id": "sunday-best",
+        "title": "Sunday Best",
+        "host": "Rev. Green",
+        "description": "Gospel, soul, and inspirational music to uplift your spirit on Sunday mornings.",
+        "airTime": "Sundays at 10:00 AM",
+        "image": "/images/sunday.jpg"
+    },
+    {
+        "id": "evening-chill",
+        "title": "Evening Chill",
+        "host": "Automated",
+        "description": "Downtempo beats and ambient soundscapes to wind down your day.",
+        "airTime": "Daily at 10:00 PM",
+        "image": "/images/chill.jpg"
+    }
+]

@@ -1,0 +1,148 @@
+{
+    "monday": [
+        {
+            "time": "08:00",
+            "title": "Morning Coffee",
+            "host": "Sarah J.",
+            "showId": "morning-coffee"
+        },
+        {
+            "time": "10:00",
+            "title": "Local News Hour",
+            "host": "News Team",
+            "showId": "local-news-hour"
+        },
+        {
+            "time": "12:00",
+            "title": "Lunchtime Jazz",
+            "host": "Marcus",
+            "showId": "lunchtime-jazz"
+        },
+        {
+            "time": "14:00",
+            "title": "Community Voices",
+            "host": "Various",
+            "showId": "community-voices"
+        },
+        {
+            "time": "22:00",
+            "title": "Evening Chill",
+            "host": "Automated",
+            "showId": "evening-chill"
+        }
+    ],
+    "tuesday": [
+        {
+            "time": "08:00",
+            "title": "Morning Coffee",
+            "host": "Sarah J.",
+            "showId": "morning-coffee"
+        },
+        {
+            "time": "10:00",
+            "title": "Tech Talk",
+            "host": "Dave Fineberg",
+            "showId": "tech-talk"
+        },
+        {
+            "time": "19:00",
+            "title": "Valley Voices",
+            "host": "Sarah J.",
+            "showId": "valley-voices"
+        },
+        {
+            "time": "22:00",
+            "title": "Evening Chill",
+            "host": "Automated",
+            "showId": "evening-chill"
+        }
+    ],
+    "wednesday": [
+        {
+            "time": "08:00",
+            "title": "Morning Coffee",
+            "host": "Sarah J.",
+            "showId": "morning-coffee"
+        },
+        {
+            "time": "12:00",
+            "title": "Midweek Mix",
+            "host": "DJ Al",
+            "showId": "midweek-mix"
+        },
+        {
+            "time": "22:00",
+            "title": "Evening Chill",
+            "host": "Automated",
+            "showId": "evening-chill"
+        }
+    ],
+    "thursday": [
+        {
+            "time": "08:00",
+            "title": "Morning Coffee",
+            "host": "Sarah J.",
+            "showId": "morning-coffee"
+        },
+        {
+            "time": "10:00",
+            "title": "Local News Hour",
+            "host": "News Team",
+            "showId": "local-news-hour"
+        },
+        {
+            "time": "22:00",
+            "title": "Evening Chill",
+            "host": "Automated",
+            "showId": "evening-chill"
+        }
+    ],
+    "friday": [
+        {
+            "time": "08:00",
+            "title": "Morning Coffee",
+            "host": "Sarah J.",
+            "showId": "morning-coffee"
+        },
+        {
+            "time": "20:00",
+            "title": "Friday Night Live",
+            "host": "The Band",
+            "showId": "friday-night-live"
+        },
+        {
+            "time": "23:00",
+            "title": "Evening Chill",
+            "host": "Automated",
+            "showId": "evening-chill"
+        }
+    ],
+    "saturday": [
+        {
+            "time": "09:00",
+            "title": "Market Live Remote",
+            "host": "Morning Team",
+            "showId": "market-live-remote"
+        },
+        {
+            "time": "22:00",
+            "title": "Evening Chill",
+            "host": "Automated",
+            "showId": "evening-chill"
+        }
+    ],
+    "sunday": [
+        {
+            "time": "10:00",
+            "title": "Sunday Best",
+            "host": "Rev. Green",
+            "showId": "sunday-best"
+        },
+        {
+            "time": "22:00",
+            "title": "Evening Chill",
+            "host": "Automated",
+            "showId": "evening-chill"
+        }
+    ]
+}
