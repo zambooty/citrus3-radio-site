@@ -43,6 +43,12 @@ export function Footer() {
                     <Link href="/policy" className="hover:text-foreground transition-colors">Privacy</Link>
                 </nav>
             </div>
+
+            <div className="container mx-auto px-4 mt-8 pt-6 border-t border-border/40 text-center">
+                <p className="text-[10px] uppercase tracking-[0.2em] font-bold opacity-40 hover:opacity-100 transition-opacity">
+                    This website was made by <span className="text-primary">McKale Jonas</span>
+                </p>
+            </div>
         </footer>
     );
 }
