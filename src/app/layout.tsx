@@ -5,6 +5,7 @@ import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { LivePlayer } from "@/components/player/LivePlayer";
+import { ThemeProvider } from "@/components/providers/ThemeProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -44,18 +45,25 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col pb-24`}
       >
-        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || "G-TC9B2W9M6K"} />
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || "G-TC9B2W9M6K"} />
 
-        <Header />
-        <main className="flex-1 w-full container mx-auto px-4 py-8">
-          {children}
-        </main>
-        <LivePlayer />
-        <Footer />
+          <Header />
+          <main className="flex-1 w-full container mx-auto px-4 py-8">
+            {children}
+          </main>
+          <LivePlayer />
+          <Footer />
+        </ThemeProvider>
       </body>
     </html>
   );

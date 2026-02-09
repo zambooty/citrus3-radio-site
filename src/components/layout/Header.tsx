@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import NextImage from 'next/image';
 import { Menu, X } from 'lucide-react';
+import { ThemeToggle } from './ThemeToggle';
 
 export function Header() {
     const [isOpen, setIsOpen] = useState(false);
@@ -21,7 +22,7 @@ export function Header() {
             <div className="container mx-auto px-4 h-16 flex items-center justify-between">
                 {/* Logo */}
                 <Link href="/" className="flex items-center gap-3 font-bold text-xl hover:opacity-90 transition-opacity">
-                    <div className="relative w-10 h-10 overflow-hidden rounded-full border border-primary/20 bg-white">
+                    <div className="relative w-10 h-10 overflow-hidden rounded-full border border-primary/20 bg-muted">
                         <NextImage
                             src="/images/logo.png"
                             alt="CASF Radio Logo"
@@ -46,17 +47,22 @@ export function Header() {
                             {link.label}
                         </Link>
                     ))}
-                    {/* CTA Button could go here */}
+                    <div className="pl-4 border-l border-border h-6 flex items-center">
+                        <ThemeToggle />
+                    </div>
                 </nav>
 
-                {/* Mobile Menu Toggle */}
-                <button
-                    className="md:hidden p-2 -mr-2 text-foreground"
-                    onClick={() => setIsOpen(!isOpen)}
-                    aria-label="Toggle menu"
-                >
-                    {isOpen ? <X size={24} /> : <Menu size={24} />}
-                </button>
+                {/* Mobile Icons */}
+                <div className="flex items-center gap-2 md:hidden">
+                    <ThemeToggle />
+                    <button
+                        className="p-2 -mr-2 text-foreground"
+                        onClick={() => setIsOpen(!isOpen)}
+                        aria-label="Toggle menu"
+                    >
+                        {isOpen ? <X size={24} /> : <Menu size={24} />}
+                    </button>
+                </div>
             </div>
 
             {/* Mobile Nav Overlay */}

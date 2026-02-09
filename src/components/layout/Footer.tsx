@@ -7,7 +7,7 @@ export function Footer() {
         <footer className="bg-muted text-muted-foreground w-full py-6 mt-auto">
             <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-4">
                 <div className="flex items-center gap-4">
-                    <div className="relative w-12 h-12 overflow-hidden rounded-full border border-primary/20 bg-white">
+                    <div className="relative w-12 h-12 overflow-hidden rounded-full border border-primary/20 bg-muted">
                         <NextImage
                             src="/images/logo.png"
                             alt="CASF Logo"

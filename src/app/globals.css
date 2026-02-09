@@ -41,81 +41,50 @@
 :root {
   /* Solar/Warm Theme Base */
   --background: #fafaf9;
-  /* Stone-50 */
   --foreground: #292524;
-  /* Stone-800 */
-
   --card: #ffffff;
   --card-foreground: #292524;
-
   --popover: #ffffff;
   --popover-foreground: #292524;
-
   --primary: #d97706;
-  /* Amber-600 */
   --primary-foreground: #ffffff;
-
   --secondary: #e7e5e4;
-  /* Stone-200 */
   --secondary-foreground: #292524;
-
   --muted: #f5f5f4;
-  /* Stone-100 */
   --muted-foreground: #78716c;
-  /* Stone-500 */
-
   --accent: #f5f5f4;
-  /* Stone-100 */
   --accent-foreground: #292524;
-
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
-
   --border: #e7e5e4;
-  /* Stone-200 */
   --input: #e7e5e4;
   --ring: #d97706;
-
   --radius: 0.5rem;
+  color-scheme: light;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #1c1917;
-    /* Stone-900 */
-    --foreground: #fafaf9;
-    /* Stone-50 */
-
-    --card: #292524;
-    /* Stone-800 */
-    --card-foreground: #fafaf9;
-
-    --popover: #292524;
-    --popover-foreground: #fafaf9;
-
-    --primary: #fbbf24;
-    /* Amber-400 */
-    --primary-foreground: #292524;
-
-    --secondary: #44403c;
-    /* Stone-700 */
-    --secondary-foreground: #fafaf9;
-
-    --muted: #292524;
-    /* Stone-800 */
-    --muted-foreground: #a8a29e;
-    /* Stone-400 */
-
-    --accent: #292524;
-    --accent-foreground: #fafaf9;
-
-    --destructive: #7f1d1d;
-    --destructive-foreground: #fafaf9;
-
-    --border: #44403c;
-    --input: #44403c;
-    --ring: #fbbf24;
-  }
+[class~="dark"],
+.dark {
+  --background: #1c1917;
+  --foreground: #fafaf9;
+  --card: #292524;
+  --card-foreground: #fafaf9;
+  --popover: #292524;
+  --popover-foreground: #fafaf9;
+  --primary: #fbbf24;
+  --primary-foreground: #292524;
+  --secondary: #44403c;
+  --secondary-foreground: #fafaf9;
+  --muted: #292524;
+  --muted-foreground: #a8a29e;
+  --accent: #292524;
+  --accent-foreground: #fafaf9;
+  --destructive: #7f1d1d;
+  --destructive-foreground: #fafaf9;
+  --border: #44403c;
+  --input: #44403c;
+  --ring: #fbbf24;
+  color-scheme: dark;
 }
 
 body {
