@@ -1,23 +1,35 @@
 import Link from 'next/link';
+import NextImage from 'next/image';
 import { Facebook, Instagram, Twitter, Mail } from 'lucide-react';
 
 export function Footer() {
     return (
         <footer className="bg-muted text-muted-foreground w-full py-6 mt-auto">
             <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-4">
-                <div className="text-sm">
-                    <p>&copy; {new Date().getFullYear()} CASF | Central Valley Community Radio.</p>
-                    <p className="text-xs mt-1">Powered by Citrus3 Streaming.</p>
+                <div className="flex items-center gap-4">
+                    <div className="relative w-12 h-12 overflow-hidden rounded-full border border-primary/20 bg-white">
+                        <NextImage
+                            src="/images/logo.png"
+                            alt="CASF Logo"
+                            fill
+                            className="object-cover"
+                        />
+                    </div>
+                    <div className="text-sm">
+                        <p className="font-bold text-foreground">CASF | Central Valley</p>
+                        <p>&copy; {new Date().getFullYear()} Community Radio.</p>
+                        <p className="text-xs mt-0.5 opacity-70">Powered by Citrus3 Streaming.</p>
+                    </div>
                 </div>
 
                 <div className="flex gap-4">
                     <Link href="https://www.facebook.com/CASFradio" className="hover:text-primary transition-colors" aria-label="Facebook">
                         <Facebook size={20} />
                     </Link>
-                    <Link href="#" className="hover:text-primary transition-colors" aria-label="Instagram">
+                    <Link href="https://www.instagram.com/casfradio" className="hover:text-primary transition-colors" aria-label="Instagram">
                         <Instagram size={20} />
                     </Link>
-                    <Link href="#" className="hover:text-primary transition-colors" aria-label="Twitter">
+                    <Link href="https://x.com/casfradio" className="hover:text-primary transition-colors" aria-label="Twitter">
                         <Twitter size={20} />
                     </Link>
                     <Link href="mailto:dfineberg@eastlink.ca" className="hover:text-primary transition-colors" aria-label="Email">

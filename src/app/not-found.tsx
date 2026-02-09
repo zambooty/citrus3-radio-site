@@ -31,7 +31,7 @@ export default function NotFound() {
             </div>
             <div className="space-y-2">
                 <h1 className="text-4xl font-bold tracking-tight">Station Not Found</h1>
-                <p className="text-muted-foreground max-w-md">We couldn't find the page you're looking for. It might be off-air or moved to a new frequency.</p>
+                <p className="text-muted-foreground max-w-md">We couldn&apos;t find the page you&apos;re looking for. It might be off-air or moved to a new frequency.</p>
             </div>
             <Button asChild size="lg">
                 <Link href="/">Return to Home Frequency</Link>

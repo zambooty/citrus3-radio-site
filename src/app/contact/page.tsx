@@ -28,8 +28,7 @@ export default function ContactPage() {
                                 <div>
                                     <p className="font-semibold">Address</p>
                                     <p className="text-sm text-muted-foreground">
-                                        [Station Address]<br />
-                                        Central Valley, NS
+                                        Central Valley, Nova Scotia
                                     </p>
                                 </div>
                             </div>

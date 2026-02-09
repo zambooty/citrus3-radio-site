@@ -49,7 +49,7 @@ export function ContactForm() {
             <div className="bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-200 p-8 rounded-lg text-center border border-green-200 dark:border-green-900">
                 <CheckCircle className="w-12 h-12 mx-auto mb-4 text-green-600 dark:text-green-400" />
                 <h3 className="text-xl font-bold mb-2">Message Sent!</h3>
-                <p>Thanks for getting in touch. We'll get back to you as soon as possible.</p>
+                <p>Thanks for getting in touch. We&apos;ll get back to you as soon as possible.</p>
                 <Button
                     variant="outline"
                     className="mt-6 border-green-600 text-green-700 hover:bg-green-100"

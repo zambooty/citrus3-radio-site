@@ -1,13 +1,13 @@
 import { Hero } from '@/components/home/Hero';
 import { RecentTracks } from '@/components/home/RecentTracks';
 import { NewsPreview } from '@/components/news/NewsPreview';
-import { getNews } from '@/lib/api';
+import { dataService } from '@/services/dataService';
 
 // Revalidate data every 60 seconds
 export const revalidate = 60;
 
 export default async function Home() {
-  const news = await getNews();
+  const news = await dataService.getNews();
 
   return (
     <div className="space-y-8">

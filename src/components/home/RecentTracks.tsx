@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { Clock, Disc } from 'lucide-react';
+import { Clock } from 'lucide-react';
 import { getRecentTracks, type Track } from '@/lib/api';
+import { AlbumArtwork } from '@/components/ui/AlbumArtwork';
 
 export function RecentTracks() {
     const [tracks, setTracks] = useState<Track[]>([]);
@@ -38,9 +39,11 @@ export function RecentTracks() {
                 <ul className="space-y-3">
                     {tracks.map((track, i) => (
                         <li key={i} className="flex items-center gap-3 p-2 hover:bg-secondary/50 rounded-md transition-colors group">
-                            <div className="w-10 h-10 bg-secondary rounded-full flex items-center justify-center text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary transition-colors">
-                                <Disc size={20} />
-                            </div>
+                            <AlbumArtwork
+                                src={track.image}
+                                alt={`${track.title} by ${track.artist}`}
+                                size={40}
+                            />
                             <div className="flex-1 min-w-0">
                                 <p className="font-medium truncate">{track.title}</p>
                                 <p className="text-sm text-muted-foreground truncate">{track.artist}</p>

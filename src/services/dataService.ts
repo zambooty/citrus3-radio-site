@@ -49,5 +49,41 @@ export const dataService = {
     async getShowById(id: string): Promise<Show | null> {
         const shows = await this.getShows();
         return shows.find(s => s.id === id) || null;
+    },
+
+    async getNextShow(): Promise<ScheduleItem | null> {
+        try {
+            const scheduleData = await this.getSchedule();
+            const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+            const now = new Date();
+            const currentDayIndex = now.getDay();
+            const currentDay = days[currentDayIndex];
+            const currentTime = now.getHours() * 60 + now.getMinutes();
+
+            // Helper to parse "HH:MM" to minutes
+            const parseTime = (timeStr: string) => {
+                const [hours, minutes] = timeStr.split(':').map(Number);
+                return hours * 60 + minutes;
+            };
+
+            // Get today's schedule
+            const todaySchedule = scheduleData[currentDay] || [];
+
+            // Find first show after current time
+            let nextShow = todaySchedule.find(show => parseTime(show.time) > currentTime);
+
+            // If no more shows today, look at tomorrow
+            if (!nextShow) {
+                const nextDayIndex = (currentDayIndex + 1) % 7;
+                const nextDay = days[nextDayIndex];
+                const nextDaySchedule = scheduleData[nextDay] || [];
+                nextShow = nextDaySchedule[0];
+            }
+
+            return nextShow || null;
+        } catch (error) {
+            console.error("Error getting next show:", error);
+            return null;
+        }
     }
 };

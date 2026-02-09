@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Radio, LayoutDashboard, Newspaper, Mic2, Calendar } from 'lucide-react';
+import { Radio, LayoutDashboard, Newspaper, Mic2, Calendar, Mail } from 'lucide-react';
 import { LogoutButton } from '@/components/admin/LogoutButton';
 import { auth } from '@/auth';
 
@@ -53,6 +53,13 @@ export default async function AdminLayout({
                     >
                         <Calendar className="w-4 h-4" />
                         Weekly Schedule
+                    </Link>
+                    <Link
+                        href="/admin/messages"
+                        className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
+                    >
+                        <Mail className="w-4 h-4" />
+                        Inbound Messages
                     </Link>
                 </nav>
 

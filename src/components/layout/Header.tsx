@@ -2,9 +2,8 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Menu, X, Radio } from 'lucide-react';
-// import { Button } from '@/components/ui/button'; // Unused
-
+import NextImage from 'next/image';
+import { Menu, X } from 'lucide-react';
 
 export function Header() {
     const [isOpen, setIsOpen] = useState(false);
@@ -21,9 +20,19 @@ export function Header() {
         <header className="bg-background/80 backdrop-blur-md sticky top-0 z-50 border-b border-border">
             <div className="container mx-auto px-4 h-16 flex items-center justify-between">
                 {/* Logo */}
-                <Link href="/" className="flex items-center gap-2 font-bold text-xl text-primary hover:opacity-90 transition-opacity">
-                    <Radio className="h-6 w-6" />
-                    <span>CASF | Central Valley</span>
+                <Link href="/" className="flex items-center gap-3 font-bold text-xl hover:opacity-90 transition-opacity">
+                    <div className="relative w-10 h-10 overflow-hidden rounded-full border border-primary/20 bg-white">
+                        <NextImage
+                            src="/images/logo.png"
+                            alt="CASF Radio Logo"
+                            fill
+                            className="object-cover"
+                        />
+                    </div>
+                    <div className="flex flex-col leading-none">
+                        <span className="text-primary tracking-tight">CASF</span>
+                        <span className="text-[10px] text-muted-foreground uppercase tracking-widest">Radio Station</span>
+                    </div>
                 </Link>
 
                 {/* Desktop Nav */}

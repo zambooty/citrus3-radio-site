@@ -3,7 +3,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { Play, Pause, Volume2, VolumeX, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils'; // Ensure utils is imported
+import { cn } from '@/lib/utils';
+import { AlbumArtwork } from '@/components/ui/AlbumArtwork';
 
 export function LivePlayer() {
     const [isPlaying, setIsPlaying] = useState(false);
@@ -11,7 +12,22 @@ export function LivePlayer() {
     const [isMuted, setIsMuted] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
-    const [currentTrack, setCurrentTrack] = useState<{ artist: string; title: string } | null>(null);
+    const [currentTrack, setCurrentTrack] = useState<{ artist: string; title: string; image?: string } | null>(null);
+    const [sessionId] = useState(() => crypto.randomUUID());
+
+    // Track listener analytics
+    const trackEvent = useRef(async (event: 'connect' | 'ping' | 'disconnect') => {
+        try {
+            await fetch('/api/analytics/track', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ event, sessionId }),
+            });
+        } catch (error) {
+            // Silently fail - analytics shouldn't break the player
+            console.debug('Analytics tracking failed:', error);
+        }
+    }).current;
 
     // Poll for current track
     useEffect(() => {
@@ -19,7 +35,11 @@ export function LivePlayer() {
             try {
                 const track = await import('@/lib/api').then(m => m.getCurrentTrack());
                 if (track) {
-                    setCurrentTrack({ artist: track.artist, title: track.title });
+                    setCurrentTrack({
+                        artist: track.artist,
+                        title: track.title,
+                        image: track.image
+                    });
                 }
             } catch (e) {
                 console.error("Failed to fetch current track", e);
@@ -31,9 +51,20 @@ export function LivePlayer() {
         return () => clearInterval(interval);
     }, []);
 
+    // Send ping while playing
+    useEffect(() => {
+        if (!isPlaying) return;
+
+        const pingInterval = setInterval(() => {
+            trackEvent('ping');
+        }, 30000); // Ping every 30 seconds
+
+        return () => clearInterval(pingInterval);
+    }, [isPlaying, trackEvent]);
+
     const audioRef = useRef<HTMLAudioElement | null>(null);
-    // Placeholder stream URL - User must update this
-    const STREAM_URL = "http://142.4.215.64:8184/stream";
+    // Radio stream URL proxied through our API to support HTTPS
+    const STREAM_URL = "/api/radio/stream";
 
     const togglePlay = () => {
         if (!audioRef.current) return;
@@ -41,6 +72,7 @@ export function LivePlayer() {
         if (isPlaying) {
             audioRef.current.pause();
             setIsPlaying(false);
+            trackEvent('disconnect'); // Track disconnect
         } else {
             setIsLoading(true);
             setError(null);
@@ -53,6 +85,7 @@ export function LivePlayer() {
                 .then(() => {
                     setIsPlaying(true);
                     setIsLoading(false);
+                    trackEvent('connect'); // Track connect
                 })
                 .catch((err) => {
                     console.error("Playback failed:", err);
@@ -106,11 +139,22 @@ export function LivePlayer() {
                         )}
                     </Button>
 
-                    <span className="font-bold text-sm md:text-base flex items-center gap-2">
-                        <span className={cn("h-2 w-2 rounded-full", isPlaying ? "bg-red-500 animate-pulse" : "bg-gray-400")} />
-                        {error ? "Offline" : isPlaying ? "On Air Now" : "Live Radio"}
-                    </span>
+                    {/* Album Artwork - Hidden on mobile */}
+                    {currentTrack?.image && (
+                        <div className="hidden md:block">
+                            <AlbumArtwork
+                                src={currentTrack.image}
+                                alt={`${currentTrack.title} by ${currentTrack.artist}`}
+                                size={48}
+                            />
+                        </div>
+                    )}
+
                     <div className="flex flex-col">
+                        <span className="font-bold text-sm md:text-base flex items-center gap-2">
+                            <span className={cn("h-2 w-2 rounded-full", isPlaying ? "bg-red-500 animate-pulse" : "bg-gray-400")} />
+                            {error ? "Offline" : isPlaying ? "On Air Now" : "Live Radio"}
+                        </span>
                         <span className="text-xs text-muted-foreground hidden md:inline-block">
                             {error ? "Stream connection failed" : currentTrack ? (
                                 <span className="animate-in fade-in slide-in-from-bottom-1 duration-500 block max-w-[200px] md:max-w-xs truncate">

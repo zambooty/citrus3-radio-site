@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
 
-const BASE_URL = "http://142.4.215.64:2199/external/rpc.php";
-const USERNAME = "casf";
+const BASE_URL = process.env.CENTOVA_API_URL || "http://cast3.citrus3.com:2199/external/rpc.php";
+const USERNAME = process.env.CENTOVA_USERNAME || "casf";
+const RID = process.env.CENTOVA_RID || "casf";
 
 export async function POST(request: Request) {
     try {
@@ -12,6 +13,7 @@ export async function POST(request: Request) {
         const params = new URLSearchParams({
             m: 'request.submit',
             username: USERNAME,
+            rid: RID,
             artist: artist,
             title: title,
             sender: sender,

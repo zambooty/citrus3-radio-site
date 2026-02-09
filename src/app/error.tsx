@@ -23,7 +23,7 @@ export default function Error({
             </div>
             <div className="space-y-2">
                 <h2 className="text-2xl font-bold">Signal Lost</h2>
-                <p className="text-muted-foreground max-w-md">Something went wrong while loading this page. We're working on restoring the broadcast.</p>
+                <p className="text-muted-foreground max-w-md">Something went wrong while loading this page. We&apos;re working on restoring the broadcast.</p>
                 {error.message && <p className="text-xs text-muted-foreground font-mono bg-muted p-2 rounded">{error.message}</p>}
             </div>
 

@@ -1,10 +1,10 @@
-import { getNews } from '@/lib/api';
+import { dataService } from '@/services/dataService';
 import { Newspaper, Calendar } from 'lucide-react';
 
 export const revalidate = 60;
 
 export default async function NewsPage() {
-    const news = await getNews();
+    const news = await dataService.getNews();
 
     return (
         <div className="max-w-3xl mx-auto space-y-8">

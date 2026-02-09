@@ -1,4 +1,5 @@
 import { auth } from "@/auth";
+import { AnalyticsOverview } from "@/components/admin/AnalyticsOverview";
 
 export default async function AdminDashboard() {
     const session = await auth();
@@ -16,8 +17,11 @@ export default async function AdminDashboard() {
                 </div>
             </div>
 
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {/* Quick Stats or Cards could go here */}
+            {/* Analytics Overview */}
+            <AnalyticsOverview />
+
+            {/* Auth Info */}
+            <div className="grid gap-6 md:grid-cols-2">
                 <div className="bg-card p-6 rounded-lg border border-border shadow-sm">
                     <h3 className="font-semibold text-lg mb-2">Auth Status</h3>
                     <p className="text-muted-foreground">Logged in as {session?.user?.email}</p>

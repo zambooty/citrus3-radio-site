@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server';
+import { fetchArtwork } from '@/services/artworkService';
 
-const BASE_URL = "http://142.4.215.64:2199/external/rpc.php";
-const USERNAME = "casf";
-const RID = "casf";
+const BASE_URL = process.env.CENTOVA_API_URL || "http://142.4.215.64:2199/external/rpc.php";
+const USERNAME = process.env.CENTOVA_USERNAME || "casf";
+const RID = process.env.CENTOVA_RID || "casf";
 
 export async function GET() {
     try {
@@ -35,14 +36,38 @@ export async function GET() {
             time: new Date(item.time * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         })) : [];
 
-        // If current track image is generic/missing, try to find it in recent tracks or use placeholder
-        if (currentTrack && (!currentTrack.image || currentTrack.image.includes('nocover'))) {
-            // Logic to find better image could go here, for now trust the API
+        // Enhance current track with better artwork
+        if (currentTrack) {
+            const artworkResult = await fetchArtwork(
+                currentTrack.artist,
+                currentTrack.title,
+                currentTrack.image
+            );
+
+            if (artworkResult.url) {
+                currentTrack.image = artworkResult.url;
+            }
         }
+
+        // Enhance recent tracks with better artwork (in parallel)
+        const enhancedRecentTracks = await Promise.all(
+            recentTracks.map(async (track) => {
+                const artworkResult = await fetchArtwork(
+                    track.artist,
+                    track.title,
+                    track.image
+                );
+
+                return {
+                    ...track,
+                    image: artworkResult.url || track.image,
+                };
+            })
+        );
 
         return NextResponse.json({
             current: currentTrack,
-            recent: recentTracks
+            recent: enhancedRecentTracks
         });
 
     } catch (error) {

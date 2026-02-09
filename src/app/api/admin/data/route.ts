@@ -22,7 +22,7 @@ export const GET = auth(async (req) => {
         const filePath = path.join(DATA_DIR, `${file}.json`);
         const data = await fs.readFile(filePath, "utf-8");
         return NextResponse.json(JSON.parse(data));
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: "File not found" }, { status: 404 });
     }
 });

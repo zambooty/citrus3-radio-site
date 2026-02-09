@@ -1,17 +1,14 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation'; // Correct import for App Router
-import { Button } from '@/components/ui/button'; // Adjust path if needed
+import { useState, useEffect, useCallback, use } from 'react';
+import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { NewsItem } from '@/lib/api';
-import { ArrowLeft, Save } from 'lucide-react'; // Ensure imports
+import { ArrowLeft, Save } from 'lucide-react';
 import Link from 'next/link';
-
-// Use `use` to unwrap params
-import { use } from 'react';
 
 export default function NewsEditor({ params }: { params: Promise<{ id: string }> }) {
     const { id } = use(params);
@@ -28,13 +25,7 @@ export default function NewsEditor({ params }: { params: Promise<{ id: string }>
         body: ''
     });
 
-    useEffect(() => {
-        if (!isNew) {
-            fetchNewsItem();
-        }
-    }, [id, isNew]); // Added dependencies
-
-    const fetchNewsItem = async () => {
+    const fetchNewsItem = useCallback(async () => {
         try {
             const res = await fetch('/api/admin/data?file=news');
             if (res.ok) {
@@ -52,7 +43,13 @@ export default function NewsEditor({ params }: { params: Promise<{ id: string }>
         } finally {
             setLoading(false);
         }
-    };
+    }, [id, router]);
+
+    useEffect(() => {
+        if (!isNew) {
+            fetchNewsItem();
+        }
+    }, [isNew, fetchNewsItem]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -64,23 +61,19 @@ export default function NewsEditor({ params }: { params: Promise<{ id: string }>
         setSaving(true);
 
         try {
-            // Fetch current list first to append/update
             const res = await fetch('/api/admin/data?file=news');
             if (!res.ok) throw new Error('Failed to fetch existing data');
 
             let newsList: NewsItem[] = await res.json();
 
             if (isNew) {
-                // Generate ID from title if new
                 const newId = formData.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
                 const newItem = { ...formData, id: newId || `news-${Date.now()}` };
                 newsList.push(newItem);
             } else {
-                // Update existing
                 newsList = newsList.map(item => item.id === id ? formData : item);
             }
 
-            // Save back
             const saveRes = await fetch('/api/admin/data', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },

@@ -1,13 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Plus, Trash2, Save, ArrowDown, ArrowUp } from 'lucide-react';
+import { Plus, Trash2, Save } from 'lucide-react';
 import { ScheduleItem, Show } from '@/lib/api';
 
 const DAYS = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
@@ -20,11 +20,7 @@ export default function ScheduleEditor() {
     const [saving, setSaving] = useState(false);
     const [activeDay, setActiveDay] = useState('monday');
 
-    useEffect(() => {
-        fetchData();
-    }, []);
-
-    const fetchData = async () => {
+    const fetchData = useCallback(async () => {
         try {
             const [scheduleRes, showsRes] = await Promise.all([
                 fetch('/api/admin/data?file=schedule'),
@@ -36,7 +32,7 @@ export default function ScheduleEditor() {
                 const showsData = await showsRes.json();
 
                 // Ensure all days exist
-                const normalizedSchedule: any = { ...sData };
+                const normalizedSchedule: Record<string, ScheduleItem[]> = { ...sData };
                 DAYS.forEach(day => {
                     if (!normalizedSchedule[day]) normalizedSchedule[day] = [];
                 });
@@ -49,7 +45,11 @@ export default function ScheduleEditor() {
         } finally {
             setLoading(false);
         }
-    };
+    }, []);
+
+    useEffect(() => {
+        fetchData();
+    }, [fetchData]);
 
     const handleSlotChange = (day: string, index: number, field: keyof ScheduleItem, value: string) => {
         const newDaySchedule = [...schedule[day]];

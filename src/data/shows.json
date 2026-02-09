@@ -3,88 +3,88 @@
         "id": "morning-coffee",
         "title": "Morning Coffee",
         "host": "Sarah J.",
-        "description": "Start your day right with a blend of upbeat tunes, local weather, and community announcements. Sarah J. brings you the perfect mix to wake up to.",
+        "description": "Start your day right with a blend of upbeat tunes, local weather, and community announcements. Sarah J. brings you the perfect mix to wake up to, featuring local business highlights and transit updates.",
         "airTime": "Weekdays at 8:00 AM",
-        "image": "/images/coffee.jpg"
+        "image": "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&q=80&w=400"
     },
     {
         "id": "local-news-hour",
         "title": "Local News Hour",
         "host": "The CASF News Team",
-        "description": "In-depth coverage of the stories directly affecting our valley. Town council updates, school board meetings, and local sports.",
+        "description": "In-depth coverage of the stories directly affecting our valley. Town council updates, school board meetings, and local sports. We bring you the voices of your neighbors on the issues that matter most.",
         "airTime": "Mon-Fri at 10:00 AM",
-        "image": "/images/news.jpg"
+        "image": "https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&q=80&w=400"
     },
     {
         "id": "lunchtime-jazz",
         "title": "Lunchtime Jazz",
         "host": "Marcus",
-        "description": "Smooth jazz, bebop, and fusion to accompany your midday break. Marcus curates a sophisticated selection of standards and modern cuts.",
+        "description": "Smooth jazz, bebop, and fusion to accompany your midday break. Marcus curates a sophisticated selection of standards and modern cuts to ease you through your afternoon.",
         "airTime": "Mondays at 12:00 PM",
-        "image": "/images/jazz.jpg"
+        "image": "https://images.unsplash.com/photo-1511192336575-5a79af67a629?auto=format&fit=crop&q=80&w=400"
     },
     {
         "id": "community-voices",
         "title": "Community Voices",
         "host": "Various",
-        "description": "An open platform for local non-profits, artists, and organizers to discuss their work and upcoming events.",
+        "description": "An open platform for local non-profits, artists, and organizers to discuss their work and upcoming events. Discover the grassroots initiatives making a difference in the Central Valley.",
         "airTime": "Mondays at 2:00 PM",
-        "image": "/images/voices.jpg"
+        "image": "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&q=80&w=400"
     },
     {
         "id": "tech-talk",
         "title": "Tech Talk",
         "host": "Dave Fineberg",
-        "description": "Demystifying technology for everyone. Dave covers the latest gadgets, digital privacy tips, and local tech initiatives.",
+        "description": "Demystifying tech for everyone. Dave covers the latest gadgets, digital privacy tips, and local tech initiatives. Learn how to navigate the digital world with confidence and curiosity.",
         "airTime": "Tuesdays at 10:00 AM",
-        "image": "/images/tech.jpg"
+        "image": "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?auto=format&fit=crop&q=80&w=400"
     },
     {
         "id": "valley-voices",
         "title": "Valley Voices",
         "host": "Sarah J.",
-        "description": "Exploring the rich history of our region through interviews with long-time residents and local historians.",
+        "description": "Exploring the rich history of our region through interviews with long-time residents and local historians. Preserving the stories and heritage of the Central Valley for future generations.",
         "airTime": "Tuesdays at 7:00 PM",
-        "image": "/images/history.jpg"
+        "image": "https://images.unsplash.com/photo-1461360228754-6e81c478c882?auto=format&fit=crop&q=80&w=400"
     },
     {
         "id": "midweek-mix",
         "title": "Midweek Mix",
         "host": "DJ Al",
-        "description": "An eclectic mix of indie, rock, and pop to get you over the hump. Expect the unexpected.",
+        "description": "An eclectic mix of indie, rock, and pop to get you over the hump. Expect the unexpected as DJ Al spins deep cuts and new discoveries from across the musical spectrum.",
         "airTime": "Wednesdays at 12:00 PM",
-        "image": "/images/mix.jpg"
+        "image": "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&q=80&w=400"
     },
     {
         "id": "friday-night-live",
         "title": "Friday Night Live",
         "host": "The Band",
-        "description": "Live recordings of local bands performing at venues around the valley. Support local music!",
+        "description": "Live recordings of local bands performing at venues around the valley. Support local music and enjoy the energy of a live show from the comfort of your home.",
         "airTime": "Fridays at 8:00 PM",
-        "image": "/images/live.jpg"
+        "image": "https://images.unsplash.com/photo-1459749411177-042180ce673c?auto=format&fit=crop&q=80&w=400"
     },
     {
         "id": "market-live-remote",
         "title": "Market Live Remote",
         "host": "Morning Team",
-        "description": "Broadcasting live from the Valley Harvest Community Market. Interviews with vendors and shoppers.",
+        "description": "Broadcasting live from the Valley Harvest Community Market. Interviews with vendors and shoppers, and live music from the market stage.",
         "airTime": "Saturdays at 9:00 AM",
-        "image": "/images/market.jpg"
+        "image": "https://images.unsplash.com/photo-1488459711615-de617c379631?auto=format&fit=crop&q=80&w=400"
     },
     {
         "id": "sunday-best",
         "title": "Sunday Best",
         "host": "Rev. Green",
-        "description": "Gospel, soul, and inspirational music to uplift your spirit on Sunday mornings.",
+        "description": "Gospel, soul, and inspirational music to uplift your spirit on Sunday mornings. A soulful start to your week with messages of hope and community.",
         "airTime": "Sundays at 10:00 AM",
-        "image": "/images/sunday.jpg"
+        "image": "https://images.unsplash.com/photo-1438232992991-995b7058bbb3?auto=format&fit=crop&q=80&w=400"
     },
     {
         "id": "evening-chill",
         "title": "Evening Chill",
         "host": "Automated",
-        "description": "Downtempo beats and ambient soundscapes to wind down your day.",
+        "description": "Downtempo beats and ambient soundscapes to wind down your day. The perfect accompaniment for relaxation, study, or late-night reflection.",
         "airTime": "Daily at 10:00 PM",
-        "image": "/images/chill.jpg"
+        "image": "https://images.unsplash.com/photo-1494232410401-ad00d5433cfa?auto=format&fit=crop&q=80&w=400"
     }
 ]

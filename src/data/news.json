@@ -1,30 +1,23 @@
 [
     {
-        "id": "1",
-        "title": "CASF Expands Signal Reach",
-        "summary": "We are thrilled to announce that our new transmitter is live, bringing community radio to the wider Valley area.",
-        "body": "After months of planning and generous community support, CASF 105.7 FM has officially powered up our new transmitter. This upgrade significantly improves reception in the outer valley regions, ensuring that more listeners can tune in to their favorite local programming. Station Manager Dave Fineberg expressed his gratitude to all the donors who made this possible. 'This is a huge milestone for independent media in our region,' he said.",
-        "date": "2023-11-15"
+        "id": "new-broadcasting-license",
+        "title": "CASF Secures Extended Broadcasting License",
+        "date": "2026-02-05",
+        "summary": "We are proud to announce that the station has successfully renewed its broadcasting license, ensuring community radio stays on the air.",
+        "body": "The station management team is pleased to share the news that CASF has received a full five-year license renewal from regulatory authorities. This milestone is a testament to the hard work of our volunteers and the unwavering support of our listeners. We look forward to continuing our mission of providing live, human radio to the Central Valley.\n\nOver the coming months, we will be introducing several new programs focused on local history and youth voices. Stay tuned for more updates as we expand our broadcast schedule!"
     },
     {
-        "id": "2",
-        "title": "Valley Harvest Community Market Returns",
-        "summary": "Join us this Saturday for the grand reopening of the seasonal market.",
-        "body": "The Valley Harvest Community Market is back for the season! Starting this Saturday at 8 AM, over 40 local vendors will be setting up shop at the fairgrounds. Expect fresh produce, artisan crafts, and live music hosted by CASF's very own 'Morning Coffee' team. We will be broadcasting live on location from 9 AM to noon.",
-        "date": "2023-11-10"
+        "id": "spring-membership-drive",
+        "title": "Join the CASF Family: Spring Membership Drive",
+        "date": "2026-02-08",
+        "summary": "Our annual Spring Membership Drive starts next week! Help us keep community radio alive and well.",
+        "body": "As a listener-supported non-profit station, CASF relies on your generosity to keep the lights on and the music playing. Starting Monday, we'll be hosting our annual membership drive. \n\nMemberships start at just $5 a month and come with exclusive perks, including early access to station events and a CASF window decal. Join today and help us maintain our independence and community focus. Every contribution, big or small, makes a significant difference in our ability to serve the Central Valley."
     },
     {
-        "id": "3",
-        "title": "New Show Alert: 'Valley Voices'",
-        "summary": "A new weekly program dedicated to local history and storytelling.",
-        "body": "We are excited to welcome Sarah J. to the CASF lineup with her new show, 'Valley Voices'. Airing every Tuesday at 7 PM, the program explores the rich history of our region through interviews with long-time residents and local historians. If you have a story to share, reach out to us via our Request page!",
-        "date": "2023-11-05"
-    },
-    {
-        "id": "4",
-        "title": "Town Council Update: Winter Parking",
-        "summary": "Important information regarding overnight parking bans starting December 1st.",
-        "body": "The Town Council has issued a reminder that the annual winter parking ban will go into effect on December 1st. To allow for safe snow removal, no on-street parking will be permitted between 1 AM and 6 AM. CASF will provide daily updates on snow clearing operations during our morning news segment.",
-        "date": "2023-11-01"
+        "id": "local-artist-spotlight-series",
+        "title": "Announcing the Local Artist Spotlight Series",
+        "date": "2026-02-09",
+        "summary": "Every Friday at 7 PM, we'll be featuring a different local artist from the valley in our new live performance series.",
+        "body": "Music is the heart of CASF, and we want to celebrate the incredible talent right here in our backyard. Our new 'Local Artist Spotlight' series kicks off this Friday. \n\nEach week, a local musician or band will join us in the studio for a live performance and interview. We'll be exploring the stories behind their music and showcasing the vibrant sounds of our region. If you're a local artist interested in being featured, please reach out through our contact page!"
     }
 ]
