@@ -1,49 +1,64 @@
-# CASF Community Radio - Digital Platform
+<p align="center">
+  <img src="public/images/banner.png" alt="CASF banner" width="100%">
+</p>
 
-Welcome to the digital home of **CASF Community Radio**, the voice of the Central Valley. This platform is a modern, responsive web application designed to connect listeners with live broadcasts, local news, and community programming.
+<h1 align="center">CASF Community Radio</h1>
 
-## 🎙️ Platform Overview
+<p align="center">
+  <strong>The Digital Pulse of the Central Valley</strong>
+</p>
 
-This application serves as the primary digital gateway for CASF listeners. It provides a seamless audio streaming experience paired with community-focused content management.
-
-### Key Features
-
-- **Live Radio Player**: A high-fidelity, persistent audio player with real-time track information and automated album artwork fetching.
-- **Dynamic News Hub**: A dedicated space for community updates, local stories, and station announcements.
-- **Show Roster & Schedule**: A comprehensive directory of shows and hosts, integrated with a weekly programming schedule.
-- **Interactive Listener Tools**: Integrated song requests and a direct contact system for community engagement.
-- **Secure Admin Dashboard**: A private management suite for the station team to update content and view listener feedback.
-- **Advanced Analytics**: Integrated tracking for listener engagement and website traffic monitoring.
-
-## 🛠️ Management & Administration
-
-The station team can manage content directly through the secure admin portal at `/admin`.
-
-### Available Tools:
-- **News Manager**: Draft, edit, and publish community news articles.
-- **Show Roster**: Update show descriptions, host information, and program imagery.
-- **Schedule Editor**: Manage the 24/7 weekly programming slots.
-- **Message Center**: View and respond to listener inquiries and song requests.
-- **Listener Insights**: Access real-time and historical listener statistics.
-
-## 🚀 Technical Excellence
-
-Built with a focus on performance, accessibility, and reliability:
-
-- **Next.js & React**: Utilizing the latest in web framework technology for lightning-fast page loads.
-- **Tailwind CSS**: A modern design system ensuring a premium, consistent look across all devices.
-- **Lucide Icons**: Crisp, professional iconography.
-- **NextAuth.js**: Industry-standard secure authentication for the admin dashboard.
-- **Node.js Integration**: Robust backend services for audio proxying and data management.
-
-## 📁 Repository Structure
-
-- `src/app`: Core application routes and pages.
-- `src/components`: Reusable UI components and feature-specific modules.
-- `src/services`: Specialized business logic (Audio, Data, Analytics).
-- `src/data`: Localized content storage for news, shows, and schedules.
-- `public`: High-quality assets including imagery and brand logos.
+<p align="center">
+  <img src="https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js" alt="Next.js">
+  <img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript">
+  <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS">
+  <img src="https://img.shields.io/badge/Lucide_Icons-FF69B4?style=for-the-badge&logo=lucide" alt="Lucide">
+  <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="License">
+</p>
 
 ---
 
-*This platform is designed to grow with the station. For technical support or feature requests, please refer to the development documentation or contact the station's web administrator.*
+## ✨ Overview
+
+CASF Community Radio is a state-of-the-art digital broadcasting platform tailored for the unique voice of the Central Valley. Built with a focus on human connection and community engagement, it offers a seamless blend of live audio, local news, and specialized programming.
+
+## 🚀 Key Features
+
+| Feature | Description |
+| :--- | :--- |
+| **📻 Live Streaming** | High-fidelity persistent audio player with real-time track metadata. |
+| **🖼️ Auto-Artwork** | Dynamic album art fetching from global music databases. |
+| **📰 News Hub** | Community-focused news management with rich-text capabilities. |
+| **📅 Smart Schedule** | Automated 24/7 program rotations and "Up Next" notifications. |
+| **🔒 Admin Suite** | Secure, full-featured dashboard for content and message management. |
+| **📊 Analytics** | Real-time listener tracking and engagement insights. |
+
+## 🛠️ Technology Stack
+
+- **Framework**: [Next.js 15](https://nextjs.org/) (App Router)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+- **Auth**: [NextAuth.js](https://next-auth.js.org/)
+- **State**: React Hooks (Strict Mode)
+- **Icons**: [Lucide React](https://lucide.dev/)
+- **Deployment**: Optimized for Vercel/Node.js
+
+## � Media Preview
+
+<p align="center">
+  <img src="public/images/hero_timeless.png" alt="Hero Section Preview" width="48%">
+  <img src="public/images/logo.png" alt="CASF Logo" width="48%">
+</p>
+
+## 🔐 Administration
+
+The platform includes a robust administrative backend for station owners:
+
+1.  **Content Management**: Intuitive editors for news, shows, and schedules.
+2.  **Listener Feedback**: Integrated message center for requests and inquiries.
+3.  **System Health**: Monitoring tools for stream status and analytics.
+
+---
+
+<p align="center">
+  Built with ❤️ for the Central Valley community.
+</p>
