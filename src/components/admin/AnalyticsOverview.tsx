@@ -5,11 +5,14 @@ import { Users, Globe, Clock, Smartphone } from 'lucide-react';
 
 interface ListenerStats {
     currentListeners: number;
+    streamListeners?: number | null;
+    websiteListeners?: number;
+    listenerSource?: 'stream' | 'website';
     geographic: Record<string, number>;
     devices: Record<string, number>;
     averageDuration: number;
     peakListeners: number;
-    peakTime?: number;
+    peakTime?: number | null;
 }
 
 export function AnalyticsOverview() {
@@ -19,7 +22,7 @@ export function AnalyticsOverview() {
     useEffect(() => {
         const fetchStats = async () => {
             try {
-                const res = await fetch('/api/analytics/stats');
+                const res = await fetch('/api/analytics/stats.php', { credentials: 'same-origin', cache: 'no-store' });
                 if (res.ok) {
                     const data = await res.json();
                     setStats(data);
@@ -63,11 +66,13 @@ export function AnalyticsOverview() {
         return `${mins}m ${secs}s`;
     };
 
-    const topCountries = Object.entries(stats.geographic)
+    const topCountries = Object.entries(stats.geographic || {})
         .sort(([, a], [, b]) => b - a)
         .slice(0, 5);
 
-    const deviceStats = Object.entries(stats.devices);
+    const deviceStats = Object.entries(stats.devices || {});
+    const websiteListeners = stats.websiteListeners ?? 0;
+    const share = (count: number) => websiteListeners > 0 ? Math.min(100, (count / websiteListeners) * 100) : 0;
 
     return (
         <div className="space-y-6">
@@ -88,6 +93,11 @@ export function AnalyticsOverview() {
                             </span>
                         )}
                     </div>
+                    <p className="text-xs text-muted-foreground mt-1">
+                        {stats.listenerSource === 'stream'
+                            ? `${websiteListeners} on this website`
+                            : 'Stream count unavailable. Showing website players.'}
+                    </p>
                 </div>
 
                 {/* Peak Listeners */}
@@ -107,10 +117,11 @@ export function AnalyticsOverview() {
                 {/* Average Duration */}
                 <div className="bg-card p-6 rounded-lg border border-border shadow-sm">
                     <div className="flex items-center justify-between mb-2">
-                        <h3 className="text-sm font-medium text-muted-foreground">Avg. Duration</h3>
+                        <h3 className="text-sm font-medium text-muted-foreground">Avg. listen today</h3>
                         <Clock className="w-4 h-4 text-muted-foreground" />
                     </div>
                     <p className="text-3xl font-bold">{formatDuration(stats.averageDuration)}</p>
+                    <p className="text-xs text-muted-foreground mt-1">Website player</p>
                 </div>
 
                 {/* Countries */}
@@ -119,7 +130,8 @@ export function AnalyticsOverview() {
                         <h3 className="text-sm font-medium text-muted-foreground">Countries</h3>
                         <Globe className="w-4 h-4 text-muted-foreground" />
                     </div>
-                    <p className="text-3xl font-bold">{Object.keys(stats.geographic).length}</p>
+                    <p className="text-3xl font-bold">{Object.keys(stats.geographic || {}).length}</p>
+                    <p className="text-xs text-muted-foreground mt-1">Website players</p>
                 </div>
             </div>
 
@@ -127,10 +139,11 @@ export function AnalyticsOverview() {
             <div className="grid gap-6 md:grid-cols-2">
                 {/* Geographic Distribution */}
                 <div className="bg-card p-6 rounded-lg border border-border shadow-sm">
-                    <h3 className="font-semibold text-lg mb-4 flex items-center gap-2">
+                    <h3 className="font-semibold text-lg mb-1 flex items-center gap-2">
                         <Globe className="w-5 h-5" />
                         Top Countries
                     </h3>
+                    <p className="text-xs text-muted-foreground mb-4">People listening in the website player.</p>
                     {topCountries.length > 0 ? (
                         <div className="space-y-3">
                             {topCountries.map(([country, count]) => (
@@ -141,7 +154,7 @@ export function AnalyticsOverview() {
                                             <div
                                                 className="bg-primary h-2 rounded-full transition-all"
                                                 style={{
-                                                    width: `${(count / stats.currentListeners) * 100}%`,
+                                                    width: `${share(count)}%`,
                                                 }}
                                             />
                                         </div>
@@ -151,16 +164,17 @@ export function AnalyticsOverview() {
                             ))}
                         </div>
                     ) : (
-                        <p className="text-sm text-muted-foreground">No active listeners</p>
+                        <p className="text-sm text-muted-foreground">No website players right now</p>
                     )}
                 </div>
 
                 {/* Device Distribution */}
                 <div className="bg-card p-6 rounded-lg border border-border shadow-sm">
-                    <h3 className="font-semibold text-lg mb-4 flex items-center gap-2">
+                    <h3 className="font-semibold text-lg mb-1 flex items-center gap-2">
                         <Smartphone className="w-5 h-5" />
                         Devices
                     </h3>
+                    <p className="text-xs text-muted-foreground mb-4">People listening in the website player.</p>
                     {deviceStats.length > 0 ? (
                         <div className="space-y-3">
                             {deviceStats.map(([device, count]) => (
@@ -171,7 +185,7 @@ export function AnalyticsOverview() {
                                             <div
                                                 className="bg-primary h-2 rounded-full transition-all"
                                                 style={{
-                                                    width: `${(count / stats.currentListeners) * 100}%`,
+                                                    width: `${share(count)}%`,
                                                 }}
                                             />
                                         </div>
@@ -181,7 +195,7 @@ export function AnalyticsOverview() {
                             ))}
                         </div>
                     ) : (
-                        <p className="text-sm text-muted-foreground">No active listeners</p>
+                        <p className="text-sm text-muted-foreground">No website players right now</p>
                     )}
                 </div>
             </div>

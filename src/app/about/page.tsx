@@ -41,13 +41,13 @@ export default function AboutPage() {
                     <h3>Licensing & Rights</h3>
                 </div>
                 <p className="text-sm text-muted-foreground">
-                    CASF operates under a license from the Federal Communications Commission (FCC) [or appropriate local usage].
-                    All music broadcast is licensed appropriately. Station management is responsible for all programming and content compliance.
+                    CASF is a listener-supported community station streaming from the Central Valley of Nova Scotia.
+                    Station management is responsible for programming and for the music played on the air.
                 </p>
                 <div className="text-sm text-muted-foreground mt-4 space-y-1">
                     <p className="font-bold">Contact:</p>
                     <p>Dave Fineberg</p>
-                    <p>Email: <a href="mailto:dfineberg@eastlink.ca" className="hover:underline text-primary">dfineberg@eastlink.ca</a></p>
+                    <p>Email: <a href="mailto:casfinfo18@gmail.com" className="hover:underline text-primary">casfinfo18@gmail.com</a></p>
                     <p>Tel: 902-680-2403</p>
                 </div>
                 <p className="text-sm text-muted-foreground mt-4">

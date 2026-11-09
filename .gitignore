@@ -30,11 +30,16 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
-.env.local
+# env files
+.env
+.env.*
+!.env.example
 
-# data
+# data written at runtime; do not commit listener sessions or caches
 src/data/messages.json
+public/data/sessions/sess_*
+public/data/analytics.json
+public/data/recent_tracks_cache.json
 
 # vercel
 .vercel
@@ -42,3 +47,6 @@ src/data/messages.json
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# portable PHP used only by npm run dev
+/tools

@@ -1,0 +1,23 @@
+RewriteEngine On
+RewriteBase /
+
+# Intercept Social Media Bots for dynamic Open Graph tags
+RewriteCond %{HTTP_USER_AGENT} (facebookexternalhit|twitterbot|linkedinbot|whatsapp|telegrambot|slackbot) [NC]
+RewriteCond %{QUERY_STRING} id=([^&]+)
+RewriteRule ^(news/article|programs/show)/? /api/meta-bot.php?type=$1&id=%1 [L]
+
+# Force trailing slash to be removed if it matches an html file
+RewriteCond %{THE_REQUEST} ^[A-Z]{3,}\s([^.]+)\.html [NC]
+RewriteRule ^ %1 [R=301,L]
+
+# Resolve clean API endpoints to .php files
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{DOCUMENT_ROOT}/$1.php -f
+RewriteRule ^(.*)$ $1.php [L]
+
+# Resolve clean URLs to .html files
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{DOCUMENT_ROOT}/$1.html -f
+RewriteRule ^(.*)$ $1.html [L]

@@ -18,13 +18,14 @@ export default function ScheduleEditor() {
     const [shows, setShows] = useState<Show[]>([]);
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
+    const [notice, setNotice] = useState('');
     const [activeDay, setActiveDay] = useState('monday');
 
     const fetchData = useCallback(async () => {
         try {
             const [scheduleRes, showsRes] = await Promise.all([
-                fetch('/api/admin/data?file=schedule'),
-                fetch('/api/admin/data?file=shows')
+                fetch('/api/data.php?file=schedule'),
+                fetch('/api/data.php?file=shows')
             ]);
 
             if (scheduleRes.ok && showsRes.ok) {
@@ -86,7 +87,7 @@ export default function ScheduleEditor() {
                 sortedSchedule[day].sort((a, b) => a.time.localeCompare(b.time));
             });
 
-            const res = await fetch('/api/admin/data', {
+            const res = await fetch('/api/data.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ file: 'schedule', content: sortedSchedule })
@@ -94,13 +95,13 @@ export default function ScheduleEditor() {
 
             if (res.ok) {
                 router.refresh();
-                alert('Schedule saved successfully!');
+                setNotice('Schedule saved.');
             } else {
-                alert('Failed to save schedule');
+                setNotice('Could not save the schedule. Check that you are still signed in.');
             }
         } catch (error) {
             console.error('Save error', error);
-            alert('Error saving schedule');
+            setNotice('Could not save the schedule.');
         } finally {
             setSaving(false);
         }
@@ -115,10 +116,13 @@ export default function ScheduleEditor() {
                     <h1 className="text-3xl font-bold tracking-tight">Weekly Schedule</h1>
                     <p className="text-muted-foreground">Manage programming slots for each day.</p>
                 </div>
+                <div className="flex items-center gap-3">
+                {notice && <p className="text-sm text-muted-foreground">{notice}</p>}
                 <Button onClick={handleSave} disabled={saving}>
                     <Save className="w-4 h-4 mr-2" />
                     {saving ? 'Saving...' : 'Save All Changes'}
                 </Button>
+                </div>
             </div>
 
             <Tabs value={activeDay} onValueChange={setActiveDay} className="w-full">

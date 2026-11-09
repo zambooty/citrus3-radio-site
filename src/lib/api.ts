@@ -33,7 +33,7 @@ export interface Show {
 // API calls using the service layer routes
 export const getNews = async (): Promise<NewsItem[]> => {
     try {
-        const res = await fetch('/api/news');
+        const res = await fetch('/api/data.php?file=news', { cache: 'no-store' });
         if (!res.ok) throw new Error('Failed to fetch news');
         return await res.json();
     } catch (error) {
@@ -44,7 +44,7 @@ export const getNews = async (): Promise<NewsItem[]> => {
 
 export const getSchedule = async (): Promise<Record<string, ScheduleItem[]>> => {
     try {
-        const res = await fetch('/api/schedule');
+        const res = await fetch('/api/data.php?file=schedule', { cache: 'no-store' });
         if (!res.ok) throw new Error('Failed to fetch schedule');
         return await res.json();
     } catch (error) {
@@ -55,7 +55,7 @@ export const getSchedule = async (): Promise<Record<string, ScheduleItem[]>> => 
 
 export const getShows = async (): Promise<Show[]> => {
     try {
-        const res = await fetch('/api/shows');
+        const res = await fetch('/api/data.php?file=shows', { cache: 'no-store' });
         if (!res.ok) throw new Error('Failed to fetch shows');
         return await res.json();
     } catch (error) {
@@ -82,18 +82,70 @@ interface RadioStatus {
 
 export const getRadioStatus = async (): Promise<RadioStatus> => {
     try {
-        const res = await fetch('/api/radio/status');
+        const res = await fetch('/api/status.php');
         if (!res.ok) throw new Error('Failed to fetch status');
-        return await res.json();
+        const data = await res.json();
+        if (data.error) {
+            throw new Error(data.error);
+        }
+        return data;
     } catch (error) {
-        console.error("Error fetching radio status:", error);
-        return { current: null, recent: [] };
+        console.warn("PHP status proxy failed, attempting direct fetch fallback...", error);
+        try {
+            const res = await fetch('https://s3.citrus3.com:2000/json/stream/casf');
+            if (!res.ok) throw new Error('Direct fetch failed');
+            const data = await res.json();
+            
+            // Parse Citrus3 format client-side
+            let current = null;
+            if (data.nowplaying) {
+                const songParts = data.nowplaying.split(/\s*[-–]\s*/);
+                let artist = songParts[0]?.trim() || 'Unknown';
+                let title = songParts.length > 1 ? songParts.slice(1).join(' - ').trim() : data.nowplaying.trim();
+                if (songParts.length <= 1) {
+                    artist = 'Unknown';
+                    title = data.nowplaying.trim();
+                }
+                current = {
+                    artist,
+                    title,
+                    image: data.coverart || null,
+                    time: 'Live'
+                };
+            }
+
+            const recent: { artist: string; title: string; image: string; time: string; }[] = [];
+            if (data.trackhistory && Array.isArray(data.trackhistory)) {
+                for (let i = 0; i < data.trackhistory.length; i++) {
+                    const trackStr = data.trackhistory[i];
+                    const songParts = trackStr.split(/\s*[-–]\s*/);
+                    let artist = songParts[0]?.trim() || 'Unknown';
+                    let title = songParts.length > 1 ? songParts.slice(1).join(' - ').trim() : trackStr.trim();
+                    if (songParts.length <= 1) {
+                        artist = 'Unknown';
+                        title = trackStr.trim();
+                    }
+                    const cover = data.covers?.[i] || "";
+                    recent.push({
+                        artist,
+                        title,
+                        image: cover,
+                        time: ''
+                    });
+                }
+            }
+
+            return { current, recent };
+        } catch (fallbackError) {
+            console.error("Direct fetch fallback also failed:", fallbackError);
+            return { current: null, recent: [] };
+        }
     }
 }
 
 export const submitRequest = async (data: Record<string, string>): Promise<{ success: boolean, message?: string, error?: string }> => {
     try {
-        const res = await fetch('/api/radio/request', {
+        const res = await fetch('/api/request.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)

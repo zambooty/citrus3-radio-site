@@ -2,9 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import "./globals.css";
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
-import { LivePlayer } from "@/components/player/LivePlayer";
+import { SiteFrame } from "@/components/layout/SiteFrame";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 
 const geistSans = Geist({
@@ -47,7 +45,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col pb-24`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
       >
         <ThemeProvider
           attribute="class"
@@ -55,14 +53,8 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || "G-TC9B2W9M6K"} />
-
-          <Header />
-          <main className="flex-1 w-full container mx-auto px-4 py-8">
-            {children}
-          </main>
-          <LivePlayer />
-          <Footer />
+          <GoogleAnalytics gaId="G-TC9B2W9M6K" />
+          <SiteFrame>{children}</SiteFrame>
         </ThemeProvider>
       </body>
     </html>

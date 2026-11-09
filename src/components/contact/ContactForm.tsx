@@ -25,7 +25,7 @@ export function ContactForm() {
 
         // Submit to API
         try {
-            const res = await fetch('/api/radio/contact', {
+            const res = await fetch('/api/contact.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)

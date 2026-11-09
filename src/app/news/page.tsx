@@ -1,10 +1,34 @@
-import { dataService } from '@/services/dataService';
+'use client';
+
+import { useState, useEffect } from 'react';
+import { getNews, NewsItem } from '@/lib/api';
 import { Newspaper, Calendar } from 'lucide-react';
+import Link from 'next/link';
+import { formatNewsDate } from '@/lib/format';
 
-export const revalidate = 60;
+export default function NewsPage() {
+    const [news, setNews] = useState<NewsItem[]>([]);
+    const [loading, setLoading] = useState(true);
 
-export default async function NewsPage() {
-    const news = await dataService.getNews();
+    useEffect(() => {
+        const fetchNews = async () => {
+            const data = await getNews();
+            setNews([...data].sort((a, b) => b.date.localeCompare(a.date)));
+            setLoading(false);
+        };
+        fetchNews();
+    }, []);
+
+    if (loading) {
+        return <div className="max-w-3xl mx-auto space-y-8 animate-pulse">
+            <div className="h-12 bg-muted rounded w-64 mx-auto"></div>
+            <div className="space-y-8">
+                {[1, 2].map(i => (
+                    <div key={i} className="h-48 bg-muted rounded-lg border border-border"></div>
+                ))}
+            </div>
+        </div>;
+    }
 
     return (
         <div className="max-w-3xl mx-auto space-y-8">
@@ -18,23 +42,25 @@ export default async function NewsPage() {
 
             <div className="space-y-8">
                 {news.map((item) => (
-                    <article key={item.id} className="bg-card text-card-foreground rounded-lg p-6 shadow-sm border border-border">
+                    <article key={item.id} className="bg-card text-card-foreground rounded-lg p-6 shadow-sm border border-border transition-all hover:shadow-md hover:border-primary/20">
                         <div className="mb-4">
-                            <h2 className="text-2xl font-bold mb-2">
-                                {item.title}
+                            <h2 className="text-2xl font-bold mb-2 hover:text-primary transition-colors">
+                                <Link href={`/news/article?id=${item.id}`}>{item.title}</Link>
                             </h2>
-                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <div className="flex items-center gap-2 text-sm text-muted-foreground font-medium">
                                 <Calendar className="w-4 h-4" />
-                                <time>{new Date(item.date).toLocaleDateString(undefined, {
-                                    year: 'numeric',
-                                    month: 'long',
-                                    day: 'numeric'
-                                })}</time>
+                                <time>{formatNewsDate(item.date)}</time>
                             </div>
                         </div>
 
                         <div className="prose dark:prose-invert max-w-none text-foreground/90">
-                            <p>{item.body}</p>
+                            <p className="line-clamp-3">{item.summary}</p>
+                        </div>
+                        
+                        <div className="mt-6">
+                            <Link href={`/news/article?id=${item.id}`} className="text-primary font-semibold hover:underline inline-flex items-center gap-1">
+                                Read more <span aria-hidden="true">&rarr;</span>
+                            </Link>
                         </div>
                     </article>
                 ))}

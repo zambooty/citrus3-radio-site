@@ -1,43 +1,55 @@
 'use client';
 
-import { useState } from 'react';
-import { signIn } from 'next-auth/react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { Suspense, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { AlertCircle, Radio } from 'lucide-react';
 
-export default function AdminLogin() {
-    const router = useRouter();
+function safeNextPath(value: string | null): string {
+    if (!value || !value.startsWith('/') || value.startsWith('//') || value.includes('\\')) {
+        return '/admin/';
+    }
+    if (!value.startsWith('/admin') || value.startsWith('/admin/login')) {
+        return '/admin/';
+    }
+    return value;
+}
+
+function LoginForm() {
     const searchParams = useSearchParams();
-    const from = searchParams.get('from') || '/admin';
+    const nextPath = safeNextPath(searchParams.get('from'));
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
-    async function handleSubmit(formData: FormData) {
+    async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+        event.preventDefault();
         setLoading(true);
         setError('');
 
-        const username = formData.get('username') as string;
-        const password = formData.get('password') as string;
+        const formData = new FormData(event.currentTarget);
+        const username = String(formData.get('username') || '');
+        const password = String(formData.get('password') || '');
 
         try {
-            const res = await signIn('credentials', {
-                username,
-                password,
-                redirect: false,
+            const res = await fetch('/api/auth.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'same-origin',
+                body: JSON.stringify({ action: 'login', username, password }),
             });
+            const data = await res.json().catch(() => null);
 
-            if (res?.error) {
-                setError('Invalid password');
+            if (!data || !res.ok || !data.success) {
+                setError(data?.error || 'Could not reach the login service. Confirm PHP is running on the server.');
                 setLoading(false);
-            } else {
-                router.push(from);
-                router.refresh();
+                return;
             }
-        } catch (err) {
-            setError('An error occurred');
+
+            window.location.assign(nextPath);
+        } catch {
+            setError('Could not reach the login service. Confirm PHP is running on the server.');
             setLoading(false);
         }
     }
@@ -50,16 +62,17 @@ export default function AdminLogin() {
                         <Radio className="w-8 h-8 text-primary" />
                     </div>
                     <h1 className="text-2xl font-bold">Station Administration</h1>
-                    <p className="text-sm text-muted-foreground">Authorized personnel only</p>
+                    <p className="text-sm text-muted-foreground">Sign in to the control panel</p>
                 </div>
 
-                <form action={handleSubmit} className="space-y-6">
+                <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="space-y-2">
                         <Label htmlFor="username">Username</Label>
                         <Input
                             id="username"
                             name="username"
                             type="text"
+                            autoComplete="username"
                             placeholder="Enter username"
                             required
                             className="text-lg"
@@ -67,12 +80,13 @@ export default function AdminLogin() {
                     </div>
 
                     <div className="space-y-2">
-                        <Label htmlFor="password">Access Key</Label>
+                        <Label htmlFor="password">Password</Label>
                         <Input
                             id="password"
                             name="password"
                             type="password"
-                            placeholder="Enter admin password"
+                            autoComplete="current-password"
+                            placeholder="Enter password"
                             required
                             className="text-lg"
                         />
@@ -86,10 +100,18 @@ export default function AdminLogin() {
                     )}
 
                     <Button type="submit" className="w-full" disabled={loading} size="lg">
-                        {loading ? 'Verifying...' : 'Access Dashboard'}
+                        {loading ? 'Verifying...' : 'Sign in'}
                     </Button>
                 </form>
             </div>
         </div>
+    );
+}
+
+export default function AdminLoginPage() {
+    return (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading sign in...</div>}>
+            <LoginForm />
+        </Suspense>
     );
 }

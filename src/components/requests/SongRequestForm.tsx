@@ -1,10 +1,23 @@
 "use client";
 
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Send, Music, CheckCircle, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 
 export function SongRequestForm() {
+    return (
+        <Suspense fallback={<div className="h-64 rounded-lg bg-muted animate-pulse" />}>
+            <SongRequestFields />
+        </Suspense>
+    );
+}
+
+function SongRequestFields() {
+    const searchParams = useSearchParams();
+    const presetArtist = searchParams.get('artist') || '';
+    const presetTitle = searchParams.get('title') || '';
     const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
     const [errorMessage, setErrorMessage] = useState('');
 
@@ -51,7 +64,7 @@ export function SongRequestForm() {
             <div className="bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-200 p-8 rounded-lg text-center border border-green-200 dark:border-green-900">
                 <CheckCircle className="w-12 h-12 mx-auto mb-4 text-green-600 dark:text-green-400" />
                 <h3 className="text-xl font-bold mb-2">Request Received!</h3>
-                <p>Thanks for your song request. Detailed to: {new Date().toLocaleTimeString()} </p>
+                <p>Thanks. The hosts have your song request.</p>
                 <Button
                     variant="outline"
                     className="mt-6 border-green-600 text-green-700 hover:bg-green-100"
@@ -69,6 +82,11 @@ export function SongRequestForm() {
                 <Music className="w-6 h-6 text-primary" />
                 Request a Song
             </h2>
+            {(presetArtist || presetTitle) && (
+                <p className="text-sm text-muted-foreground -mt-4">
+                    Filled in from what&apos;s playing. Add your name and send it to the hosts.
+                </p>
+            )}
 
             {status === 'error' && (
                 <div className="mb-6 bg-destructive/10 text-destructive p-4 rounded-md flex items-center gap-2">
@@ -83,13 +101,13 @@ export function SongRequestForm() {
                         <label htmlFor="artist" className="text-sm font-medium block">
                             Artist Name <span className="text-destructive">*</span>
                         </label>
-                        <input
+                        <Input
                             type="text"
                             id="artist"
                             name="artist"
                             placeholder="e.g. The Beatles"
+                            defaultValue={presetArtist}
                             required
-                            className="w-full flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                         />
                     </div>
 
@@ -97,13 +115,13 @@ export function SongRequestForm() {
                         <label htmlFor="title" className="text-sm font-medium block">
                             Song Title <span className="text-destructive">*</span>
                         </label>
-                        <input
+                        <Input
                             type="text"
                             id="title"
                             name="title"
                             placeholder="e.g. Hey Jude"
+                            defaultValue={presetTitle}
                             required
-                            className="w-full flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                         />
                     </div>
                 </div>
@@ -112,12 +130,11 @@ export function SongRequestForm() {
                     <label htmlFor="dedication" className="text-sm font-medium block">
                         Dedicated To <span className="text-muted-foreground font-normal">(Optional)</span>
                     </label>
-                    <input
+                    <Input
                         type="text"
                         id="dedication"
                         name="dedication"
                         placeholder="e.g. My mom's birthday"
-                        className="w-full flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                     />
                 </div>
 
@@ -126,13 +143,12 @@ export function SongRequestForm() {
                         <label htmlFor="name" className="text-sm font-medium block">
                             Your Name <span className="text-destructive">*</span>
                         </label>
-                        <input
+                        <Input
                             type="text"
                             id="name"
                             name="name"
                             placeholder="Jane Doe"
                             required
-                            className="w-full flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                         />
                     </div>
 
@@ -140,13 +156,12 @@ export function SongRequestForm() {
                         <label htmlFor="email" className="text-sm font-medium block">
                             Your Email <span className="text-destructive">*</span>
                         </label>
-                        <input
+                        <Input
                             type="email"
                             id="email"
                             name="email"
                             placeholder="jane@example.com"
                             required
-                            className="w-full flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                         />
                     </div>
                 </div>

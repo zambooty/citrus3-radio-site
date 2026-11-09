@@ -18,7 +18,7 @@ export function LivePlayer() {
     // Track listener analytics
     const trackEvent = useRef(async (event: 'connect' | 'ping' | 'disconnect') => {
         try {
-            await fetch('/api/analytics/track', {
+            await fetch('/api/analytics/track.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ event, sessionId }),
@@ -51,20 +51,33 @@ export function LivePlayer() {
         return () => clearInterval(interval);
     }, []);
 
-    // Send ping while playing
+    // Send ping while playing, and a disconnect if the tab closes mid-song.
     useEffect(() => {
         if (!isPlaying) return;
 
         const pingInterval = setInterval(() => {
             trackEvent('ping');
-        }, 30000); // Ping every 30 seconds
+        }, 30000);
 
-        return () => clearInterval(pingInterval);
-    }, [isPlaying, trackEvent]);
+        const leave = () => {
+            const body = JSON.stringify({ event: 'disconnect', sessionId });
+            if (navigator.sendBeacon) {
+                navigator.sendBeacon('/api/analytics/track.php', new Blob([body], { type: 'application/json' }));
+                return;
+            }
+            trackEvent('disconnect');
+        };
+        window.addEventListener('pagehide', leave);
+
+        return () => {
+            clearInterval(pingInterval);
+            window.removeEventListener('pagehide', leave);
+        };
+    }, [isPlaying, sessionId, trackEvent]);
 
     const audioRef = useRef<HTMLAudioElement | null>(null);
-    // Radio stream URL proxied through our API to support HTTPS
-    const STREAM_URL = "/api/radio/stream";
+    // Radio stream URL pointing directly to new Citrus3 HTTPS stream
+    const STREAM_URL = "https://s3.citrus3.com:2000/stream/casf";
 
     const togglePlay = () => {
         if (!audioRef.current) return;
@@ -95,6 +108,18 @@ export function LivePlayer() {
                 });
         }
     };
+
+    const togglePlayRef = useRef(togglePlay);
+    togglePlayRef.current = togglePlay;
+
+    useEffect(() => {
+        const start = () => {
+            if (audioRef.current && !audioRef.current.paused) return;
+            togglePlayRef.current();
+        };
+        window.addEventListener('casf-play', start);
+        return () => window.removeEventListener('casf-play', start);
+    }, []);
 
     const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newVolume = parseFloat(e.target.value);
@@ -127,7 +152,7 @@ export function LivePlayer() {
                         size="icon"
                         className="h-12 w-12 rounded-full shadow-md"
                         onClick={togglePlay}
-                        disabled={!!error && !isPlaying} // Allow trying again if error but logic might need reset
+                        disabled={isLoading}
                         aria-label={isPlaying ? "Pause" : "Play Live Radio"}
                     >
                         {isLoading ? (
@@ -146,6 +171,13 @@ export function LivePlayer() {
                                 src={currentTrack.image}
                                 alt={`${currentTrack.title} by ${currentTrack.artist}`}
                                 size={48}
+                                artist={currentTrack.artist}
+                                trackTitle={currentTrack.title}
+                                onArtistFound={(realArtist) => {
+                                    if (currentTrack.artist === 'Unknown' || !currentTrack.artist) {
+                                        setCurrentTrack(prev => prev ? { ...prev, artist: realArtist } : prev);
+                                    }
+                                }}
                             />
                         </div>
                     )}
@@ -155,12 +187,16 @@ export function LivePlayer() {
                             <span className={cn("h-2 w-2 rounded-full", isPlaying ? "bg-red-500 animate-pulse" : "bg-gray-400")} />
                             {error ? "Offline" : isPlaying ? "On Air Now" : "Live Radio"}
                         </span>
-                        <span className="text-xs text-muted-foreground hidden md:inline-block">
+                        <span className="text-xs text-muted-foreground">
                             {error ? "Stream connection failed" : currentTrack ? (
                                 <span className="animate-in fade-in slide-in-from-bottom-1 duration-500 block max-w-[200px] md:max-w-xs truncate">
                                     <span className="font-semibold text-primary">{currentTrack.title}</span>
-                                    <span className="mx-1">•</span>
-                                    {currentTrack.artist}
+                                    {currentTrack.artist && currentTrack.artist !== 'Unknown' && (
+                                        <>
+                                            <span className="mx-1">•</span>
+                                            {currentTrack.artist}
+                                        </>
+                                    )}
                                 </span>
                             ) : "CASF | Central Valley Community Radio"}
                         </span>
@@ -178,7 +214,7 @@ export function LivePlayer() {
 
                 {/* Volume Control */}
                 <div className="flex items-center gap-2 w-24 md:w-32">
-                    <button onClick={toggleMute} className="text-muted-foreground hover:text-foreground">
+                    <button onClick={toggleMute} className="p-2 -ml-2 text-muted-foreground hover:text-foreground">
                         {isMuted || volume === 0 ? <VolumeX size={20} /> : <Volume2 size={20} />}
                     </button>
                     <input

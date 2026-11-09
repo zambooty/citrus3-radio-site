@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import NextImage from 'next/image';
-import { Facebook, Instagram, Twitter, Mail } from 'lucide-react';
+import { Facebook, Mail } from 'lucide-react';
 
 export function Footer() {
     return (
@@ -26,18 +26,13 @@ export function Footer() {
                     <Link href="https://www.facebook.com/CASFradio" className="hover:text-primary transition-colors" aria-label="Facebook">
                         <Facebook size={20} />
                     </Link>
-                    <Link href="https://www.instagram.com/casfradio" className="hover:text-primary transition-colors" aria-label="Instagram">
-                        <Instagram size={20} />
-                    </Link>
-                    <Link href="https://x.com/casfradio" className="hover:text-primary transition-colors" aria-label="Twitter">
-                        <Twitter size={20} />
-                    </Link>
-                    <Link href="mailto:dfineberg@eastlink.ca" className="hover:text-primary transition-colors" aria-label="Email">
+                    <Link href="mailto:casfinfo18@gmail.com" className="hover:text-primary transition-colors" aria-label="Email">
                         <Mail size={20} />
                     </Link>
                 </div>
 
                 <nav className="flex gap-4 text-sm">
+                    <Link href="/shows" className="hover:text-foreground transition-colors">Shows</Link>
                     <Link href="/about" className="hover:text-foreground transition-colors">About</Link>
                     <Link href="/contact" className="hover:text-foreground transition-colors">Contact</Link>
                     <Link href="/policy" className="hover:text-foreground transition-colors">Privacy</Link>
@@ -46,7 +41,7 @@ export function Footer() {
 
             <div className="container mx-auto px-4 mt-8 pt-6 border-t border-border/40 text-center">
                 <p className="text-[10px] uppercase tracking-[0.2em] font-bold opacity-40 hover:opacity-100 transition-opacity">
-                    This website was made by <span className="text-primary">McKale Jonas</span>
+                    Made & Maintained by <span className="text-primary">MAKESOFT WEB TECHNOLOGIES</span>
                 </p>
             </div>
         </footer>

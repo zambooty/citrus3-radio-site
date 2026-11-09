@@ -2,16 +2,25 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import NextImage from 'next/image';
 import { Menu, X } from 'lucide-react';
 import { ThemeToggle } from './ThemeToggle';
 
 export function Header() {
     const [isOpen, setIsOpen] = useState(false);
+    const pathname = usePathname() || '/';
+
+    const isActive = (href: string) => {
+        const current = pathname.length > 1 && pathname.endsWith('/') ? pathname.slice(0, -1) : pathname;
+        if (href === '/') return current === '/';
+        return current === href || current.startsWith(`${href}/`);
+    };
 
     const navLinks = [
         { href: '/', label: 'Home' },
         { href: '/schedule', label: 'Schedule' },
+        { href: '/shows', label: 'Shows' },
         { href: '/news', label: 'News' },
         { href: '/request', label: 'Request Song' },
         { href: '/about', label: 'About' },
@@ -42,7 +51,7 @@ export function Header() {
                         <Link
                             key={link.href}
                             href={link.href}
-                            className="text-foreground/80 hover:text-primary transition-colors font-medium"
+                            className={`transition-colors font-medium ${isActive(link.href) ? 'text-primary' : 'text-foreground/80 hover:text-primary'}`}
                         >
                             {link.label}
                         </Link>
@@ -72,7 +81,7 @@ export function Header() {
                         <Link
                             key={link.href}
                             href={link.href}
-                            className="text-lg font-medium py-2 hover:text-primary transition-colors border-b border-border/50 last:border-0"
+                            className={`text-lg font-medium py-4 transition-colors border-b border-border/50 last:border-0 ${isActive(link.href) ? 'text-primary' : 'hover:text-primary'}`}
                             onClick={() => setIsOpen(false)}
                         >
                             {link.label}

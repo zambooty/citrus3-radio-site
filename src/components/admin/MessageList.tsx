@@ -21,7 +21,7 @@ export function MessageList() {
 
     const fetchMessages = async () => {
         try {
-            const res = await fetch('/api/admin/messages');
+            const res = await fetch('/api/messages.php');
             if (res.ok) {
                 const data = await res.json();
                 setMessages(data.sort((a: Message, b: Message) => new Date(b.date).getTime() - new Date(a.date).getTime()));
@@ -39,7 +39,7 @@ export function MessageList() {
 
     const markAsRead = async (id: string) => {
         try {
-            const res = await fetch('/api/admin/messages', {
+            const res = await fetch('/api/messages.php', {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ id })
@@ -55,7 +55,7 @@ export function MessageList() {
     const deleteMessage = async (id: string) => {
         if (!confirm('Are you sure you want to delete this message?')) return;
         try {
-            const res = await fetch(`/api/admin/messages?id=${id}`, {
+            const res = await fetch(`/api/messages.php?id=${id}`, {
                 method: 'DELETE'
             });
             if (res.ok) {

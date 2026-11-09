@@ -1,5 +1,50 @@
 import { artworkCache } from '@/lib/artworkCache';
+import fs from 'fs/promises';
+import path from 'path';
+import crypto from 'crypto';
 
+async function downloadAndSaveArtwork(url: string, artist: string, track: string): Promise<string | null> {
+    try {
+        const publicDir = path.join(process.cwd(), 'public');
+        const artworksDir = path.join(publicDir, 'artworks');
+        
+        // Create directory if it doesn't exist
+        await fs.mkdir(artworksDir, { recursive: true });
+
+        // Generate safe filename
+        const safeArtist = artist.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+        const safeTrack = track.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+        const hash = crypto.createHash('md5').update(url).digest('hex').substring(0, 8);
+        const filename = `${safeArtist}-${safeTrack}-${hash}.jpg`;
+        const localPath = path.join(artworksDir, filename);
+        const publicUrl = `/artworks/${filename}`;
+
+        // Check if file already exists
+        try {
+            await fs.access(localPath);
+            return publicUrl; // File exists, return cached path
+        } catch {
+            // File doesn't exist, proceed to download
+        }
+
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000);
+        const response = await fetch(url, { signal: controller.signal });
+        clearTimeout(timeoutId);
+        
+        if (!response.ok) return null;
+
+        const arrayBuffer = await response.arrayBuffer();
+        const buffer = Buffer.from(arrayBuffer);
+
+        await fs.writeFile(localPath, buffer);
+        
+        return publicUrl;
+    } catch (error) {
+        console.error('Error saving artwork locally:', error);
+        return null; // Fallback to original URL if saving fails
+    }
+}
 // Normalize text for better API matching
 function normalizeText(text: string): string {
     return text
@@ -134,7 +179,10 @@ async function fetchFromMusicBrainz(artist: string, track: string): Promise<stri
                     const coverUrl = `https://coverartarchive.org/release/${releaseId}/front`;
 
                     try {
-                        const coverResponse = await fetch(coverUrl, { method: 'HEAD' });
+                        const coverResponse = await fetch(coverUrl, { 
+                            method: 'HEAD',
+                            signal: controller.signal 
+                        });
                         if (coverResponse.ok) {
                             return coverUrl;
                         }
@@ -176,30 +224,34 @@ export async function fetchArtwork(
     ]);
 
     // Check iTunes first (usually best quality)
+    let finalUrl = null;
+    let source = 'none';
+
     if (results[0].status === 'fulfilled' && results[0].value) {
-        const url = results[0].value;
-        artworkCache.set(artist, track, url, 'itunes');
-        return { url, source: 'itunes' };
+        finalUrl = results[0].value;
+        source = 'itunes';
+    } else if (results[1].status === 'fulfilled' && results[1].value) {
+        finalUrl = results[1].value;
+        source = 'deezer';
+    } else if (results[2].status === 'fulfilled' && results[2].value) {
+        finalUrl = results[2].value;
+        source = 'musicbrainz';
     }
 
-    // Check Deezer
-    if (results[1].status === 'fulfilled' && results[1].value) {
-        const url = results[1].value;
-        artworkCache.set(artist, track, url, 'deezer');
-        return { url, source: 'deezer' };
-    }
-
-    // Check MusicBrainz
-    if (results[2].status === 'fulfilled' && results[2].value) {
-        const url = results[2].value;
-        artworkCache.set(artist, track, url, 'musicbrainz');
-        return { url, source: 'musicbrainz' };
+    if (finalUrl) {
+        // Download and save locally
+        const localUrl = await downloadAndSaveArtwork(finalUrl, artist, track);
+        const savedUrl = localUrl || finalUrl; // fallback to external URL if save fails
+        artworkCache.set(artist, track, savedUrl, source);
+        return { url: savedUrl, source: source as any };
     }
 
     // Use fallback if provided and not "nocover"
     if (fallbackUrl && !fallbackUrl.includes('nocover')) {
-        artworkCache.set(artist, track, fallbackUrl, 'fallback');
-        return { url: fallbackUrl, source: 'fallback' };
+        const localUrl = await downloadAndSaveArtwork(fallbackUrl, artist, track);
+        const savedUrl = localUrl || fallbackUrl;
+        artworkCache.set(artist, track, savedUrl, 'fallback');
+        return { url: savedUrl, source: 'fallback' };
     }
 
     return { url: null, source: 'none' };

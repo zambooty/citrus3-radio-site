@@ -19,7 +19,7 @@ export default function NewsAdmin() {
 
     const fetchNews = async () => {
         try {
-            const res = await fetch('/api/admin/data?file=news');
+            const res = await fetch('/api/data.php?file=news');
             if (res.ok) {
                 const data = await res.json();
                 setNews(data);
@@ -36,7 +36,7 @@ export default function NewsAdmin() {
 
         try {
             const newList = news.filter(item => item.id !== id);
-            const res = await fetch('/api/admin/data', {
+            const res = await fetch('/api/data.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ file: 'news', content: newList })
@@ -71,7 +71,7 @@ export default function NewsAdmin() {
                     <p className="text-muted-foreground">Create and manage community news articles.</p>
                 </div>
                 <Button asChild>
-                    <Link href="/admin/news/new">
+                    <Link href="/admin/news/editor?id=new">
                         <Plus className="w-4 h-4 mr-2" />
                         Create Article
                     </Link>
@@ -129,7 +129,7 @@ export default function NewsAdmin() {
                                     <td className="px-6 py-4 text-sm font-semibold">{item.title}</td>
                                     <td className="px-6 py-4 text-right space-x-2">
                                         <Button variant="ghost" size="sm" asChild>
-                                            <Link href={`/admin/news/${item.id}`}>
+                                            <Link href={`/admin/news/editor?id=${item.id}`}>
                                                 <Edit2 className="w-4 h-4" />
                                             </Link>
                                         </Button>
@@ -156,7 +156,7 @@ export default function NewsAdmin() {
                             </div>
                             <div className="p-4 bg-muted/30 border-t border-border flex justify-end gap-2">
                                 <Button variant="outline" size="sm" asChild>
-                                    <Link href={`/admin/news/${item.id}`}>
+                                    <Link href={`/admin/news/editor?id=${item.id}`}>
                                         <Edit2 className="w-4 h-4 mr-2" /> Edit
                                     </Link>
                                 </Button>

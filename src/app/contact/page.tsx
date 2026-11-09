@@ -37,7 +37,9 @@ export default function ContactPage() {
                                 <Phone className="w-5 h-5 text-primary mt-1" />
                                 <div>
                                     <p className="font-semibold">Phone</p>
-                                    <p className="text-sm text-muted-foreground">902-680-2403</p>
+                                    <p className="text-sm text-muted-foreground">
+                                        <a href="tel:+19026802403" className="hover:underline">902-680-2403</a>
+                                    </p>
                                 </div>
                             </div>
 
@@ -46,7 +48,7 @@ export default function ContactPage() {
                                 <div>
                                     <p className="font-semibold">Email</p>
                                     <p className="text-sm text-muted-foreground">
-                                        <a href="mailto:dfineberg@eastlink.ca" className="hover:underline">dfineberg@eastlink.ca</a>
+                                        <a href="mailto:casfinfo18@gmail.com" className="hover:underline">casfinfo18@gmail.com</a>
                                     </p>
                                 </div>
                             </div>

@@ -20,7 +20,7 @@ export default function ShowsAdmin() {
 
     const fetchShows = async () => {
         try {
-            const res = await fetch('/api/admin/data?file=shows');
+            const res = await fetch('/api/data.php?file=shows');
             if (res.ok) {
                 const data = await res.json();
                 setShows(data);
@@ -37,7 +37,7 @@ export default function ShowsAdmin() {
 
         try {
             const newList = shows.filter(item => item.id !== id);
-            const res = await fetch('/api/admin/data', {
+            const res = await fetch('/api/data.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ file: 'shows', content: newList })
@@ -73,7 +73,7 @@ export default function ShowsAdmin() {
                     <p className="text-muted-foreground">Manage the roster of on-air programs and hosts.</p>
                 </div>
                 <Button asChild>
-                    <Link href="/admin/shows/new">
+                    <Link href="/admin/shows/editor?id=new">
                         <Plus className="w-4 h-4 mr-2" />
                         Add Show
                     </Link>
@@ -133,7 +133,7 @@ export default function ShowsAdmin() {
                                     <td className="px-6 py-4 text-sm text-muted-foreground">{item.airTime}</td>
                                     <td className="px-6 py-4 text-right space-x-2">
                                         <Button variant="ghost" size="sm" asChild>
-                                            <Link href={`/admin/shows/${item.id}`}>
+                                            <Link href={`/admin/shows/editor?id=${item.id}`}>
                                                 <Edit2 className="w-4 h-4" />
                                             </Link>
                                         </Button>
@@ -180,7 +180,7 @@ export default function ShowsAdmin() {
                             </div>
                             <div className="p-4 bg-muted/30 border-t border-border flex justify-end gap-2">
                                 <Button variant="outline" size="sm" asChild>
-                                    <Link href={`/admin/shows/${item.id}`}>
+                                    <Link href={`/admin/shows/editor?id=${item.id}`}>
                                         <Edit2 className="w-4 h-4 mr-2" /> Edit
                                     </Link>
                                 </Button>
