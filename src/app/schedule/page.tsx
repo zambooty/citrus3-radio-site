@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { getSchedule, getShows, ScheduleItem, Show } from '@/lib/api';
 import { Calendar } from 'lucide-react';
 import { formatShowTime, minutesFromTime, todayKey } from '@/lib/format';
-import { ShareOnFacebook } from '@/components/shows/ShareOnFacebook';
+import { ShowActions } from '@/components/shows/ShareOnFacebook';
 
 const DAY_ORDER = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
 
@@ -126,13 +126,13 @@ export default function SchedulePage() {
                                                     )}
                                                     {profile && (
                                                         <div className="mt-2">
-                                                            <ShareOnFacebook
+                                                            <ShowActions
                                                                 compact
                                                                 id={profile.id}
                                                                 title={profile.title}
                                                                 description={profile.description}
                                                                 host={profile.host}
-                                                                airTime={profile.airTime}
+                                                                airTime={profile.airTime || formatShowTime(show.time)}
                                                             />
                                                         </div>
                                                     )}

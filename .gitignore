@@ -19,6 +19,7 @@
 
 # production
 /build
+/PRODUCTION BACKUPS
 
 # misc
 .DS_Store

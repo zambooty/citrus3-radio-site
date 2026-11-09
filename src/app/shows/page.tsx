@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Clock, Mic, User } from 'lucide-react';
 import { getShows, Show } from '@/lib/api';
-import { ShareOnFacebook } from '@/components/shows/ShareOnFacebook';
+import { ShowActions } from '@/components/shows/ShareOnFacebook';
 
 export default function ShowsPage() {
     const [shows, setShows] = useState<Show[]>([]);
@@ -85,7 +85,7 @@ export default function ShowsPage() {
                                 </div>
                             </Link>
                             <div className="px-5 pb-5">
-                                <ShareOnFacebook
+                                <ShowActions
                                     id={show.id}
                                     title={show.title}
                                     description={show.description}
