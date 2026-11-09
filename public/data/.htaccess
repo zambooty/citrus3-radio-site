@@ -1,1 +1,4 @@
-<FilesMatch "^(messages|requests|analytics)\.json$">\n    Require all denied\n    Deny from all\n</FilesMatch>
+<FilesMatch "^(messages|requests|analytics)\.json$">
+    Require all denied
+    Deny from all
+</FilesMatch>

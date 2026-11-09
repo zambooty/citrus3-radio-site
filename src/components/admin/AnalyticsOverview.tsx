@@ -22,9 +22,34 @@ export function AnalyticsOverview() {
     useEffect(() => {
         const fetchStats = async () => {
             try {
-                const res = await fetch('/api/analytics/stats.php', { credentials: 'same-origin', cache: 'no-store' });
+                let connections: number | null = null;
+                try {
+                    const streamRes = await fetch('https://s3.citrus3.com:2000/json/stream/casf', { cache: 'no-store' });
+                    if (streamRes.ok) {
+                        const stream = await streamRes.json();
+                        if (typeof stream?.connections === 'number') {
+                            connections = stream.connections;
+                        }
+                    }
+                } catch {
+                    connections = null;
+                }
+
+                const res = await fetch('/api/analytics/stats.php', {
+                    method: connections === null ? 'GET' : 'POST',
+                    credentials: 'same-origin',
+                    cache: 'no-store',
+                    headers: connections === null ? undefined : { 'Content-Type': 'application/json' },
+                    body: connections === null ? undefined : JSON.stringify({ connections }),
+                });
                 if (res.ok) {
                     const data = await res.json();
+                    if (connections !== null) {
+                        data.currentListeners = connections;
+                        data.streamListeners = connections;
+                        data.listenerSource = 'stream';
+                        data.peakListeners = Math.max(Number(data.peakListeners) || 0, connections);
+                    }
                     setStats(data);
                 }
             } catch (error) {
@@ -35,7 +60,7 @@ export function AnalyticsOverview() {
         };
 
         fetchStats();
-        const interval = setInterval(fetchStats, 10000); // Refresh every 10s
+        const interval = setInterval(fetchStats, 10000);
         return () => clearInterval(interval);
     }, []);
 

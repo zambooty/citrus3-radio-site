@@ -33,18 +33,40 @@ export default function ShowsAdmin() {
     };
 
     const deleteShow = async (id: string) => {
-        if (!confirm('Are you sure you want to delete this show? This will NOT remove it from the schedule automagically.')) return;
+        if (!confirm('Delete this show and remove it from the weekly schedule?')) return;
 
         try {
-            const newList = shows.filter(item => item.id !== id);
-            const res = await fetch('/api/data.php', {
+            const scheduleRes = await fetch('/api/data.php?file=schedule', { credentials: 'same-origin' });
+            if (!scheduleRes.ok) {
+                alert('Failed to read the schedule');
+                return;
+            }
+            const schedule = await scheduleRes.json();
+            const nextSchedule: Record<string, { showId?: string }[]> = {};
+            for (const [day, slots] of Object.entries(schedule)) {
+                nextSchedule[day] = Array.isArray(slots)
+                    ? slots.filter((slot) => slot?.showId !== id)
+                    : [];
+            }
+
+            const scheduleSave = await fetch('/api/data.php', {
                 method: 'POST',
+                credentials: 'same-origin',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ file: 'shows', content: newList })
+                body: JSON.stringify({ file: 'schedule', content: nextSchedule }),
+            });
+            const newList = shows.filter(item => item.id !== id);
+            const showSave = await fetch('/api/data.php', {
+                method: 'POST',
+                credentials: 'same-origin',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ file: 'shows', content: newList }),
             });
 
-            if (res.ok) {
+            if (scheduleSave.ok && showSave.ok) {
                 setShows(newList);
+            } else {
+                alert('Failed to delete show');
             }
         } catch {
             alert('Failed to delete show');

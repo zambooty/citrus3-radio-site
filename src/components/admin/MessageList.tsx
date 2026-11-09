@@ -21,10 +21,11 @@ export function MessageList() {
 
     const fetchMessages = async () => {
         try {
-            const res = await fetch('/api/messages.php');
+            const res = await fetch('/api/messages.php', { credentials: 'same-origin' });
             if (res.ok) {
                 const data = await res.json();
-                setMessages(data.sort((a: Message, b: Message) => new Date(b.date).getTime() - new Date(a.date).getTime()));
+                const list = Array.isArray(data) ? data : [];
+                setMessages(list.sort((a: Message, b: Message) => new Date(b.date).getTime() - new Date(a.date).getTime()));
             }
         } catch (error) {
             console.error('Failed to fetch messages:', error);
@@ -41,6 +42,7 @@ export function MessageList() {
         try {
             const res = await fetch('/api/messages.php', {
                 method: 'PATCH',
+                credentials: 'same-origin',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ id })
             });
@@ -56,7 +58,8 @@ export function MessageList() {
         if (!confirm('Are you sure you want to delete this message?')) return;
         try {
             const res = await fetch(`/api/messages.php?id=${id}`, {
-                method: 'DELETE'
+                method: 'DELETE',
+                credentials: 'same-origin',
             });
             if (res.ok) {
                 setMessages(messages.filter(m => m.id !== id));

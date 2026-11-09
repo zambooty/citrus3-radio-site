@@ -8,15 +8,8 @@ function isAuthenticated() {
 }
 
 $ALLOWED_FILES = ["news", "shows", "schedule"];
-$DATA_DIR = __DIR__ . '/../data/';
-
-if (!file_exists($DATA_DIR)) {
-    mkdir($DATA_DIR, 0755, true);
-}
-
-// Auto-protect data directory if not already protected
-$htaccessFile = $DATA_DIR . '.htaccess';
-file_put_contents($htaccessFile, "<FilesMatch \"^(messages|requests|analytics)\\.json$\">\n    Require all denied\n    Deny from all\n</FilesMatch>");
+$DATA_DIR = citrus_data_dir() . '/';
+citrus_protect_private_data();
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     // Both public and admin can read data from JSON files, but typically the frontend fetches JSON directly.
@@ -62,8 +55,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $filePath = $DATA_DIR . $file . '.json';
-    // Validate JSON and pretty print
-    $jsonString = json_encode($content, JSON_PRETTY_PRINT);
+    citrus_backup_json($filePath);
+    $jsonString = json_encode($content, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+    if ($jsonString === false || strlen($jsonString) > 2000000) {
+        http_response_code(400);
+        echo json_encode(['error' => 'Content is too large']);
+        exit;
+    }
     
     // Secure file write
     $fp = fopen($filePath, 'c');

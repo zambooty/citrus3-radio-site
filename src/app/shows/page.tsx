@@ -88,7 +88,6 @@ export default function ShowsPage() {
                                 <ShowActions
                                     id={show.id}
                                     title={show.title}
-                                    description={show.description}
                                     host={show.host}
                                     airTime={show.airTime}
                                 />

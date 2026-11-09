@@ -1,6 +1,10 @@
 RewriteEngine On
 RewriteBase /
 
+# One host for the admin cookie. www and the apex do not share it.
+RewriteCond %{HTTP_HOST} ^www\.casfradio\.ca$ [NC]
+RewriteRule ^ https://casfradio.ca%{REQUEST_URI} [L,R=301]
+
 # Intercept Social Media Bots for dynamic Open Graph tags
 RewriteCond %{HTTP_USER_AGENT} (facebookexternalhit|twitterbot|linkedinbot|whatsapp|telegrambot|slackbot) [NC]
 RewriteCond %{QUERY_STRING} id=([^&]+)

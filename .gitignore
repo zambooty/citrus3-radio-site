@@ -41,6 +41,10 @@ src/data/messages.json
 public/data/sessions/sess_*
 public/data/analytics.json
 public/data/recent_tracks_cache.json
+public/data/backups/*
+!public/data/backups/.htaccess
+public/data/ratelimit/*
+!public/data/ratelimit/.htaccess
 
 # vercel
 .vercel

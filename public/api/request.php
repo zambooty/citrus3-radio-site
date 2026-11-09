@@ -1,10 +1,38 @@
 <?php
+require_once __DIR__ . '/bootstrap.php';
 header('Content-Type: application/json; charset=utf-8');
 
-// EMAIL CONFIGURATION
-// During testing, this goes to mckale.g.jonas@gmail.com.
-// Change this email address to your station's DJ or production email for launch.
-$TO_EMAIL = "casfinfo18@gmail.com";
+$TO_EMAIL = 'casfinfo18@gmail.com';
+$filePath = citrus_data_dir() . '/requests.json';
+
+if ($_SERVER['REQUEST_METHOD'] === 'GET' || $_SERVER['REQUEST_METHOD'] === 'DELETE') {
+    citrus_start_session();
+    if (!citrus_is_authenticated()) {
+        http_response_code(401);
+        echo json_encode(['error' => 'Unauthorized']);
+        exit;
+    }
+
+    if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+        echo json_encode(citrus_read_json_list($filePath));
+        exit;
+    }
+
+    $id = (string) ($_GET['id'] ?? '');
+    $requests = array_values(array_filter(
+        citrus_read_json_list($filePath),
+        function ($item) use ($id) {
+            return is_array($item) && ($item['id'] ?? '') !== $id;
+        }
+    ));
+    if (!citrus_write_json_list($filePath, $requests, 300)) {
+        http_response_code(500);
+        echo json_encode(['error' => 'Failed to delete request.']);
+        exit;
+    }
+    echo json_encode(['success' => true]);
+    exit;
+}
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
@@ -12,91 +40,64 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-$body = json_decode(file_get_contents('php://input'), true);
-$artist = $body['artist'] ?? '';
-$song = $body['song'] ?? $body['title'] ?? '';
-$name = $body['name'] ?? $body['sender'] ?? '';
-$email = $body['email'] ?? '';
-$dedication = $body['dedication'] ?? '';
+citrus_protect_private_data();
+if (!citrus_rate_allow('request', 5, 600)) {
+    http_response_code(429);
+    echo json_encode(['error' => 'Too many requests. Please try again in a few minutes.']);
+    exit;
+}
 
-if (!$artist || !$song) {
+$body = json_decode(file_get_contents('php://input'), true);
+if (!is_array($body)) {
+    $body = [];
+}
+
+$artist = citrus_clip((string) ($body['artist'] ?? ''), 120);
+$song = citrus_clip((string) ($body['song'] ?? $body['title'] ?? ''), 160);
+$name = citrus_clip((string) ($body['name'] ?? $body['sender'] ?? ''), 80);
+$email = citrus_clip((string) ($body['email'] ?? ''), 120);
+$dedication = citrus_clip((string) ($body['dedication'] ?? ''), 500);
+
+if ($artist === '' || $song === '') {
     http_response_code(400);
     echo json_encode(['error' => 'Missing artist or song']);
     exit;
 }
 
-$DATA_DIR = __DIR__ . '/../data/';
-$filePath = $DATA_DIR . 'requests.json';
-
-if (!file_exists($DATA_DIR)) {
-    mkdir($DATA_DIR, 0755, true);
-}
-
-// Auto-protect data directory if not already protected
-$htaccessFile = $DATA_DIR . '.htaccess';
-file_put_contents($htaccessFile, '<FilesMatch "^(messages|requests|analytics)\.json$">\n    Require all denied\n    Deny from all\n</FilesMatch>');
-
-$requests = [];
-if (file_exists($filePath)) {
-    $requests = json_decode(file_get_contents($filePath), true) ?: [];
-}
-
-$newRequest = [
+$requests = citrus_read_json_list($filePath);
+array_unshift($requests, [
     'id' => uniqid('req_', true),
-    'artist' => htmlspecialchars($artist),
-    'song' => htmlspecialchars($song),
-    'name' => htmlspecialchars($name),
-    'email' => htmlspecialchars($email),
-    'dedication' => htmlspecialchars($dedication),
+    'artist' => $artist,
+    'song' => $song,
+    'name' => $name,
+    'email' => $email,
+    'dedication' => $dedication,
     'date' => date('c'),
-];
+]);
 
-array_unshift($requests, $newRequest);
-
-// Secure file write
-$fp = fopen($filePath, 'c');
-$writeSuccess = false;
-if ($fp) {
-    if (flock($fp, LOCK_EX)) {
-        ftruncate($fp, 0);
-        fwrite($fp, json_encode($requests, JSON_PRETTY_PRINT));
-        flock($fp, LOCK_UN);
-        $writeSuccess = true;
-    }
-    fclose($fp);
-}
-
-if ($writeSuccess) {
-    // Send email notification
-    $subject = "[CASF Radio] New Song Request: " . $song . " by " . $artist;
-    
-    $message = "You have received a new song request on CASF Radio!\n\n";
-    $message .= "Request Details:\n";
-    $message .= "----------------------------------------\n";
-    $message .= "Artist:       " . $artist . "\n";
-    $message .= "Song Title:   " . $song . "\n";
-    $message .= "Dedicated To: " . ($dedication ? $dedication : "None") . "\n\n";
-    $message .= "Listener Details:\n";
-    $message .= "----------------------------------------\n";
-    $message .= "Name:         " . $name . "\n";
-    $message .= "Email:        " . $email . "\n\n";
-    $message .= "Date:         " . date('Y-m-d H:i:s') . "\n";
-    
-    // Set headers
-    $headers = "From: noreply@casfradio.ca\r\n";
-    if (!empty($email) && filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $headers .= "Reply-To: " . $email . "\r\n";
-    }
-    $headers .= "X-Mailer: PHP/" . phpversion();
-    
-    // Suppress warning if mail server is not configured in local environment
-    @mail($TO_EMAIL, $subject, $message, $headers);
-
-    echo json_encode([
-        'success' => true,
-        'message' => 'Your request has been submitted!'
-    ]);
-} else {
+if (!citrus_write_json_list($filePath, $requests, 300)) {
     http_response_code(500);
     echo json_encode(['error' => 'Failed to save request.']);
+    exit;
 }
+
+$subject = '[CASF Radio] New Song Request: ' . $song . ' by ' . $artist;
+$mail = "You have received a new song request on CASF Radio.\n\n";
+$mail .= "Artist: " . $artist . "\n";
+$mail .= "Song: " . $song . "\n";
+$mail .= "Dedicated to: " . ($dedication !== '' ? $dedication : 'None') . "\n";
+$mail .= "Name: " . $name . "\n";
+$mail .= "Email: " . $email . "\n";
+$mail .= "Date: " . date('Y-m-d H:i:s') . "\n";
+
+$headers = "From: noreply@casfradio.ca\r\n";
+if ($email !== '' && filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    $headers .= 'Reply-To: ' . $email . "\r\n";
+}
+$headers .= 'X-Mailer: PHP/' . phpversion();
+@mail($TO_EMAIL, $subject, $mail, $headers);
+
+echo json_encode([
+    'success' => true,
+    'message' => 'Your request has been submitted!',
+]);

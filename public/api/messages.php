@@ -13,16 +13,8 @@ if (!isAuthenticated()) {
     exit;
 }
 
-$DATA_DIR = __DIR__ . '/../data/';
-$filePath = $DATA_DIR . 'messages.json';
-
-if (!file_exists($DATA_DIR)) {
-    mkdir($DATA_DIR, 0755, true);
-}
-
-// Auto-protect data directory if not already protected
-$htaccessFile = $DATA_DIR . '.htaccess';
-file_put_contents($htaccessFile, '<FilesMatch "^(messages|requests|analytics)\.json$">\n    Require all denied\n    Deny from all\n</FilesMatch>');
+citrus_protect_private_data();
+$filePath = citrus_data_dir() . '/messages.json';
 
 function saveMessagesSecurely($filePath, $messages) {
     $fp = fopen($filePath, 'c');

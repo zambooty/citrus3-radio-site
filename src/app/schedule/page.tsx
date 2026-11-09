@@ -130,7 +130,6 @@ export default function SchedulePage() {
                                                                 compact
                                                                 id={profile.id}
                                                                 title={profile.title}
-                                                                description={profile.description}
                                                                 host={profile.host}
                                                                 airTime={profile.airTime || formatShowTime(show.time)}
                                                             />

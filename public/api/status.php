@@ -2,6 +2,7 @@
 header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: no-store');
 
+require_once __DIR__ . '/bootstrap.php';
 require_once __DIR__ . '/analytics/lib.php';
 
 $API_URL = "https://s3.citrus3.com:2000/json/stream/casf";
@@ -78,9 +79,7 @@ try {
         mkdir($dataDir, 0755, true);
     }
     
-    // Auto-protect data directory if not already protected
-    $htaccessFile = $dataDir . '.htaccess';
-    file_put_contents($htaccessFile, '<FilesMatch "^(messages|requests|analytics)\.json$">\n    Require all denied\n    Deny from all\n</FilesMatch>');
+    citrus_protect_private_data();
 
     $cacheFile = $dataDir . 'recent_tracks_cache.json';
     $cachedHistory = [];

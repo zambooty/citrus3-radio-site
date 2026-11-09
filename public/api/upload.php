@@ -45,10 +45,21 @@ if (!file_exists($uploadDir)) {
     mkdir($uploadDir, 0755, true);
 }
 
-// Generate a safe, unique filename
-$ext = pathinfo($file['name'], PATHINFO_EXTENSION);
-$filename = uniqid('upload_', true) . '_' . bin2hex(random_bytes(4)) . '.' . strtolower($ext);
+$extensions = [
+    'image/jpeg' => 'jpg',
+    'image/png' => 'png',
+    'image/gif' => 'gif',
+    'image/webp' => 'webp',
+];
+$ext = $extensions[$mimeType];
+$filename = uniqid('upload_', true) . '_' . bin2hex(random_bytes(4)) . '.' . $ext;
 $destination = $uploadDir . $filename;
+
+$guard = $uploadDir . '.htaccess';
+$guardRules = "<FilesMatch \"\\.(php|phtml|php3|phar|cgi|pl|py|asp|aspx|sh)$\">\n    Require all denied\n    Deny from all\n</FilesMatch>\n";
+if (!is_file($guard) || file_get_contents($guard) !== $guardRules) {
+    file_put_contents($guard, $guardRules);
+}
 
 if (move_uploaded_file($file['tmp_name'], $destination)) {
     // Return the absolute web path for Next.js to use

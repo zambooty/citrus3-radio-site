@@ -247,8 +247,11 @@ if (!function_exists('citrus_analytics_file')) {
         return (int) $data['connections'];
     }
 
-    function citrus_listener_stats(): array {
-        $streamListeners = citrus_fetch_stream_connections();
+    function citrus_listener_stats(?int $knownStream = null): array {
+        $streamListeners = $knownStream;
+        if ($streamListeners === null) {
+            $streamListeners = citrus_fetch_stream_connections();
+        }
         if ($streamListeners !== null) {
             citrus_note_stream_listeners($streamListeners);
         }

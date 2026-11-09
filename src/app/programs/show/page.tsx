@@ -102,7 +102,6 @@ export default function ShowPage() {
                         className="w-full"
                         id={show.id}
                         title={show.title}
-                        description={show.description}
                         host={show.host}
                         airTime={show.airTime}
                     />

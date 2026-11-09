@@ -3,11 +3,11 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { Facebook } from 'lucide-react';
+import { showShareText } from '@/lib/shareText';
 
 type ShareShow = {
     id: string;
     title: string;
-    description?: string;
     host?: string;
     airTime?: string;
     compact?: boolean;
@@ -22,27 +22,7 @@ export function showPagePath(id: string) {
     return `/programs/show?id=${encodeURIComponent(id)}`;
 }
 
-function closeSentence(lead: string) {
-    const text = lead.trim();
-    return /[.!?]$/.test(text) ? text : `${text}.`;
-}
-
-export function showShareText(show: Omit<ShareShow, 'compact' | 'id' | 'className'>) {
-    const title = show.title.trim();
-    const when = show.airTime?.trim();
-    const host = show.host?.trim();
-    const withHost = host ? ` with ${host}` : '';
-
-    if (when) {
-        return `${closeSentence(`${title} is on ${when}${withHost}`)} Come listen with us. Put it on, settle in, and enjoy the show on CASF Radio.`;
-    }
-
-    if (host) {
-        return `${title} with ${host} is on CASF Radio. Come listen with us. Put it on, settle in, and enjoy the show.`;
-    }
-
-    return `${title} is on CASF Radio. Come listen with us. Put it on, settle in, and enjoy the show.`;
-}
+export { showShareText };
 
 function buttonClass(compact: boolean, className = '') {
     return `${compact
@@ -50,9 +30,13 @@ function buttonClass(compact: boolean, className = '') {
         : 'inline-flex items-center justify-center gap-2 rounded-md border border-border bg-background px-3 py-2 text-sm font-medium text-foreground hover:border-[#1877F2] hover:text-[#1877F2]'} ${className}`;
 }
 
-export function ShareOnFacebook({ id, title, description, host, airTime, compact = false, className = '' }: ShareShow) {
-    const text = showShareText({ title, description, host, airTime });
-    const href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(showShareUrl(id))}&quote=${encodeURIComponent(text)}`;
+export function FacebookShareButton({ title, text, href, compact = false, className = '' }: {
+    title: string;
+    text: string;
+    href: string;
+    compact?: boolean;
+    className?: string;
+}) {
     const [notice, setNotice] = useState('');
     const [caption, setCaption] = useState('');
 
@@ -94,6 +78,12 @@ export function ShareOnFacebook({ id, title, description, host, airTime, compact
     );
 }
 
+export function ShareOnFacebook({ id, title, host, airTime, compact = false, className = '' }: ShareShow) {
+    const text = showShareText({ title, host, airTime });
+    const href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(showShareUrl(id))}&quote=${encodeURIComponent(text)}`;
+    return <FacebookShareButton title={title} text={text} href={href} compact={compact} className={className} />;
+}
+
 export function MoreDetails({ id, title, compact = false, className = '' }: Pick<ShareShow, 'id' | 'title' | 'compact' | 'className'>) {
     return (
         <Link
@@ -106,13 +96,12 @@ export function MoreDetails({ id, title, compact = false, className = '' }: Pick
     );
 }
 
-export function ShowActions({ id, title, description, host, airTime, compact = false, className = '' }: ShareShow) {
+export function ShowActions({ id, title, host, airTime, compact = false, className = '' }: ShareShow) {
     return (
         <div className={`flex flex-wrap items-start gap-2 ${className}`}>
             <ShareOnFacebook
                 id={id}
                 title={title}
-                description={description}
                 host={host}
                 airTime={airTime}
                 compact={compact}

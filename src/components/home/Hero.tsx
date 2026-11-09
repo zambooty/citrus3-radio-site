@@ -49,7 +49,7 @@ export function Hero() {
                             <span className="text-primary underline decoration-primary/20 underline-offset-8">Real Stories.</span>
                         </h1>
                         <p className="text-xl text-muted-foreground leading-relaxed max-w-lg mx-auto lg:mx-0 font-medium">
-                            Join us for local news, diverse talk shows, and hand-picked tunes. We are the voice of the Central Valley, broadcasting across the airwaves and online.
+                            Join us for local news, diverse talk shows, and hand-picked tunes. We are the voice of the Central Valley, streaming online from Nova Scotia.
                         </p>
                     </div>
 
