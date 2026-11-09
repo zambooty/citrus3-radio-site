@@ -1,4 +1,3 @@
-import { ContactForm } from '@/components/contact/ContactForm';
 import { MapPin, Phone, Mail } from 'lucide-react';
 
 export const metadata = {
@@ -8,61 +7,45 @@ export const metadata = {
 
 export default function ContactPage() {
     return (
-        <div className="max-w-5xl mx-auto space-y-12">
+        <div className="max-w-xl mx-auto space-y-10">
             <div className="text-center space-y-4">
                 <h1 className="text-4xl font-bold">Get in Touch</h1>
                 <p className="text-xl text-muted-foreground italic">We love hearing from our listeners!</p>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-12">
-                <div className="md:col-span-2">
-                    <ContactForm />
-                </div>
-
-                <div className="space-y-8">
-                    <section className="space-y-4">
-                        <h2 className="text-xl font-bold border-b pb-2">Station Info</h2>
-                        <div className="space-y-4">
-                            <div className="flex items-start gap-3">
-                                <MapPin className="w-5 h-5 text-primary mt-1" />
-                                <div>
-                                    <p className="font-semibold">Address</p>
-                                    <p className="text-sm text-muted-foreground">
-                                        Central Valley, Nova Scotia
-                                    </p>
-                                </div>
-                            </div>
-
-                            <div className="flex items-start gap-3">
-                                <Phone className="w-5 h-5 text-primary mt-1" />
-                                <div>
-                                    <p className="font-semibold">Phone</p>
-                                    <p className="text-sm text-muted-foreground">
-                                        <a href="tel:+19026802403" className="hover:underline">902-680-2403</a>
-                                    </p>
-                                </div>
-                            </div>
-
-                            <div className="flex items-start gap-3">
-                                <Mail className="w-5 h-5 text-primary mt-1" />
-                                <div>
-                                    <p className="font-semibold">Email</p>
-                                    <p className="text-sm text-muted-foreground">
-                                        <a href="mailto:casfinfo18@gmail.com" className="hover:underline">casfinfo18@gmail.com</a>
-                                    </p>
-                                </div>
-                            </div>
+            <div className="mx-auto max-w-sm space-y-8 text-center">
+                <section className="space-y-6">
+                    <h2 className="text-xl font-bold">Station Info</h2>
+                    <div className="space-y-5">
+                        <div className="space-y-1">
+                            <MapPin className="mx-auto h-5 w-5 text-primary" />
+                            <p className="font-semibold">Address</p>
+                            <p className="text-sm text-muted-foreground">Central Valley, Nova Scotia</p>
                         </div>
-                    </section>
+                        <div className="space-y-1">
+                            <Phone className="mx-auto h-5 w-5 text-primary" />
+                            <p className="font-semibold">Phone</p>
+                            <p className="text-sm text-muted-foreground">
+                                <a href="tel:+19026802403" className="hover:underline">902-680-2403</a>
+                            </p>
+                        </div>
+                        <div className="space-y-1">
+                            <Mail className="mx-auto h-5 w-5 text-primary" />
+                            <p className="font-semibold">Email</p>
+                            <p className="text-sm text-muted-foreground">
+                                <a href="mailto:casfinfo18@gmail.com" className="hover:underline">casfinfo18@gmail.com</a>
+                            </p>
+                        </div>
+                    </div>
+                </section>
 
-                    <section className="bg-secondary/20 p-6 rounded-lg space-y-3">
-                        <h3 className="font-bold">Dave Fineberg</h3>
-                        <p className="text-sm text-muted-foreground italic">Station Management</p>
-                        <p className="text-xs text-muted-foreground">
-                            For press inquiries, licensing questions, or community partnership opportunities.
-                        </p>
-                    </section>
-                </div>
+                <section className="rounded-lg bg-secondary/20 p-6 space-y-2">
+                    <h3 className="font-bold">Dave Fineberg</h3>
+                    <p className="text-sm text-muted-foreground italic">Station Management</p>
+                    <p className="text-xs text-muted-foreground">
+                        For press inquiries, licensing questions, or community partnership opportunities.
+                    </p>
+                </section>
             </div>
         </div>
     );

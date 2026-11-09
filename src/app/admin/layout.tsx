@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
-import { Radio, LayoutDashboard, Newspaper, Mic2, Calendar, Inbox } from 'lucide-react';
+import { Radio, LayoutDashboard, Newspaper, Mic2, Calendar, Music } from 'lucide-react';
 import { LogoutButton } from '@/components/admin/LogoutButton';
 
 const NAV = [
@@ -11,7 +11,7 @@ const NAV = [
     { href: '/admin/news', label: 'News Updates', icon: Newspaper, exact: false },
     { href: '/admin/shows', label: 'Shows & Hosts', icon: Mic2, exact: false },
     { href: '/admin/schedule', label: 'Weekly Schedule', icon: Calendar, exact: false },
-    { href: '/admin/inbox', label: 'Inbox', icon: Inbox, exact: false },
+    { href: '/admin/inbox', label: 'Song requests', icon: Music, exact: false },
 ];
 
 function normalizePath(path: string) {

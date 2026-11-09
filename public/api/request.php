@@ -4,6 +4,53 @@ header('Content-Type: application/json; charset=utf-8');
 
 $TO_EMAIL = 'casfinfo18@gmail.com';
 $filePath = citrus_data_dir() . '/requests.json';
+$REQUEST_LIMIT = 1000;
+
+function citrus_request_slot(array $slots, int $minutes): ?array {
+    $best = null;
+    $bestMinutes = -1;
+    foreach ($slots as $slot) {
+        if (!is_array($slot) || !preg_match('/^(\d{1,2}):(\d{2})$/', (string) ($slot['time'] ?? ''), $match)) {
+            continue;
+        }
+        $slotMinutes = ((int) $match[1]) * 60 + (int) $match[2];
+        if ($slotMinutes > $minutes || $slotMinutes < $bestMinutes) {
+            continue;
+        }
+        $bestMinutes = $slotMinutes;
+        $best = $slot;
+    }
+    return $best;
+}
+
+function citrus_request_show(): array {
+    $empty = ['show' => '', 'showId' => ''];
+    $path = citrus_data_dir() . '/schedule.json';
+    if (!is_file($path)) {
+        return $empty;
+    }
+    $schedule = json_decode((string) file_get_contents($path), true);
+    if (!is_array($schedule)) {
+        return $empty;
+    }
+
+    $now = new DateTime('now', new DateTimeZone('America/Halifax'));
+    $days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+    $weekday = (int) $now->format('w');
+    $minutes = ((int) $now->format('G')) * 60 + (int) $now->format('i');
+    $slot = citrus_request_slot($schedule[$days[$weekday]] ?? [], $minutes);
+    if ($slot === null) {
+        $slot = citrus_request_slot($schedule[$days[($weekday + 6) % 7]] ?? [], 24 * 60);
+    }
+    if ($slot === null) {
+        return $empty;
+    }
+
+    return [
+        'show' => trim((string) ($slot['title'] ?? '')),
+        'showId' => trim((string) ($slot['showId'] ?? '')),
+    ];
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET' || $_SERVER['REQUEST_METHOD'] === 'DELETE') {
     citrus_start_session();
@@ -25,11 +72,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || $_SERVER['REQUEST_METHOD'] === 'DELE
             return is_array($item) && ($item['id'] ?? '') !== $id;
         }
     ));
-    if (!citrus_write_json_list($filePath, $requests, 300)) {
+    if (!citrus_write_json_list($filePath, $requests, $REQUEST_LIMIT)) {
         http_response_code(500);
         echo json_encode(['error' => 'Failed to delete request.']);
         exit;
     }
+    echo json_encode(['success' => true]);
+    exit;
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'PATCH') {
+    citrus_start_session();
+    if (!citrus_is_authenticated()) {
+        http_response_code(401);
+        echo json_encode(['error' => 'Unauthorized']);
+        exit;
+    }
+
+    $body = json_decode(file_get_contents('php://input'), true);
+    $id = is_array($body) ? (string) ($body['id'] ?? '') : '';
+    if ($id === '' || ($body['action'] ?? '') !== 'done') {
+        http_response_code(400);
+        echo json_encode(['error' => 'Missing request.']);
+        exit;
+    }
+
+    $requests = citrus_read_json_list($filePath);
+    $found = false;
+    foreach ($requests as &$item) {
+        if (is_array($item) && (string) ($item['id'] ?? '') === $id) {
+            $item['status'] = 'done';
+            $item['doneAt'] = date('c');
+            $found = true;
+            break;
+        }
+    }
+    unset($item);
+
+    if (!$found || !citrus_write_json_list($filePath, $requests, $REQUEST_LIMIT)) {
+        http_response_code($found ? 500 : 404);
+        echo json_encode(['error' => $found ? 'Failed to archive request.' : 'Request not found.']);
+        exit;
+    }
+
     echo json_encode(['success' => true]);
     exit;
 }
@@ -64,6 +149,7 @@ if ($artist === '' || $song === '') {
     exit;
 }
 
+$onAir = citrus_request_show();
 $requests = citrus_read_json_list($filePath);
 array_unshift($requests, [
     'id' => uniqid('req_', true),
@@ -72,10 +158,13 @@ array_unshift($requests, [
     'name' => $name,
     'email' => $email,
     'dedication' => $dedication,
+    'show' => $onAir['show'],
+    'showId' => $onAir['showId'],
+    'status' => 'open',
     'date' => date('c'),
 ]);
 
-if (!citrus_write_json_list($filePath, $requests, 300)) {
+if (!citrus_write_json_list($filePath, $requests, $REQUEST_LIMIT)) {
     http_response_code(500);
     echo json_encode(['error' => 'Failed to save request.']);
     exit;
@@ -86,6 +175,7 @@ $mail = "You have received a new song request on CASF Radio.\n\n";
 $mail .= "Artist: " . $artist . "\n";
 $mail .= "Song: " . $song . "\n";
 $mail .= "Dedicated to: " . ($dedication !== '' ? $dedication : 'None') . "\n";
+$mail .= "Show: " . ($onAir['show'] !== '' ? $onAir['show'] : 'Off the schedule') . "\n";
 $mail .= "Name: " . $name . "\n";
 $mail .= "Email: " . $email . "\n";
 $mail .= "Date: " . date('Y-m-d H:i:s') . "\n";

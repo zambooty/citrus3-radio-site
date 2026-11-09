@@ -5,6 +5,9 @@ import { useSearchParams } from 'next/navigation';
 import { Send, Music, CheckCircle, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+
+const DEDICATION_LIMIT = 500;
 
 export function SongRequestForm() {
     return (
@@ -20,6 +23,10 @@ function SongRequestFields() {
     const presetTitle = searchParams.get('title') || '';
     const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
     const [errorMessage, setErrorMessage] = useState('');
+    const [formKey, setFormKey] = useState(0);
+    const [cleared, setCleared] = useState(false);
+    const [dedication, setDedication] = useState('');
+    const [dedicationNotice, setDedicationNotice] = useState('');
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -68,7 +75,13 @@ function SongRequestFields() {
                 <Button
                     variant="outline"
                     className="mt-6 border-green-600 text-green-700 hover:bg-green-100"
-                    onClick={() => setStatus('idle')}
+                    onClick={() => {
+                        setCleared(true);
+                        setDedication('');
+                        setDedicationNotice('');
+                        setFormKey((key) => key + 1);
+                        setStatus('idle');
+                    }}
                 >
                     Make Another Request
                 </Button>
@@ -95,7 +108,7 @@ function SongRequestFields() {
                 </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form key={formKey} onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
                         <label htmlFor="artist" className="text-sm font-medium block">
@@ -106,7 +119,7 @@ function SongRequestFields() {
                             id="artist"
                             name="artist"
                             placeholder="e.g. The Beatles"
-                            defaultValue={presetArtist}
+                            defaultValue={cleared ? '' : presetArtist}
                             required
                         />
                     </div>
@@ -120,7 +133,7 @@ function SongRequestFields() {
                             id="title"
                             name="title"
                             placeholder="e.g. Hey Jude"
-                            defaultValue={presetTitle}
+                            defaultValue={cleared ? '' : presetTitle}
                             required
                         />
                     </div>
@@ -130,12 +143,25 @@ function SongRequestFields() {
                     <label htmlFor="dedication" className="text-sm font-medium block">
                         Dedicated To <span className="text-muted-foreground font-normal">(Optional)</span>
                     </label>
-                    <Input
-                        type="text"
+                    <Textarea
                         id="dedication"
                         name="dedication"
+                        rows={3}
+                        value={dedication}
                         placeholder="e.g. My mom's birthday"
+                        onChange={(event) => {
+                            const next = event.target.value;
+                            if (next.length > DEDICATION_LIMIT) {
+                                setDedication(next.slice(0, DEDICATION_LIMIT));
+                                setDedicationNotice('Dedications stop at 500 characters.');
+                                return;
+                            }
+                            setDedication(next);
+                            setDedicationNotice('');
+                        }}
                     />
+                    <p className="text-xs text-muted-foreground">{dedication.length}/500</p>
+                    {dedicationNotice && <p className="text-sm text-destructive">{dedicationNotice}</p>}
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
