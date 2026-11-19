@@ -4,13 +4,14 @@ import { useEffect, useRef, useState } from 'react';
 
 const PAGE_URL = 'https://www.facebook.com/CASFradio';
 const FEED_HEIGHT = 500;
+const PLUGIN_HEIGHT = 1600;
 
 function pluginSrc(width: number) {
     const params = new URLSearchParams({
         href: PAGE_URL,
-        show_posts: 'true',
+        tabs: 'timeline',
         width: String(width),
-        height: String(FEED_HEIGHT),
+        height: String(PLUGIN_HEIGHT),
         small_header: 'true',
         adapt_container_width: 'false',
         hide_cover: 'true',
@@ -68,20 +69,23 @@ export function FacebookFeed() {
                         <span className="text-sm text-stone-600">Open the page to see the latest posts.</span>
                     </a>
                 ) : (
-                    <iframe
-                        title="CASF Radio Facebook feed"
-                        src={pluginSrc(width)}
-                        width={width}
-                        height={FEED_HEIGHT}
-                        className="block h-full w-full bg-white"
-                        style={{ border: 'none', overflow: 'hidden' }}
-                        allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
-                        onLoad={() => {
-                            loadedRef.current = true;
-                            setBlocked(false);
-                        }}
-                        onError={() => setBlocked(true)}
-                    />
+                    <div className="h-full overflow-y-auto overscroll-contain">
+                        <iframe
+                            title="CASF Radio Facebook feed"
+                            src={pluginSrc(width)}
+                            width={width}
+                            height={PLUGIN_HEIGHT}
+                            scrolling="yes"
+                            className="block w-full bg-white"
+                            style={{ border: 'none', height: PLUGIN_HEIGHT }}
+                            allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+                            onLoad={() => {
+                                loadedRef.current = true;
+                                setBlocked(false);
+                            }}
+                            onError={() => setBlocked(true)}
+                        />
+                    </div>
                 )}
             </div>
             <a
